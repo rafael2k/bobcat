@@ -1,0 +1,31 @@
+#
+# ELIB - library of MSC/TC compatible functions
+#        and old MASM/new MASM/TASM compatible too
+#
+
+# Currently this makes a library of small model functions,
+# to make large model, change MODEL=-ml and AFLAGS=... -DFUNC_L=1
+#
+CFLAGS= -B -Y -a -d -f- -G -O -Z -DMSDOS -IC:\borlandc\include
+MODELL=-mh
+
+# Assembler flags
+AFLAGS=-mx -t
+AMODELL=-dFUNC_L=1
+
+# Define PC-specific include file
+
+.c.obj:
+        bcc -c $(MODELL) $(CFLAGS) $*.c
+        tlib ..\lib\wattcphg -+$*
+
+.asm.obj:
+        tasm $(AFLAGS) $(AMODELL) $*;
+        tlib ..\lib\wattcphg -+$*
+
+start: elib.lib
+
+ELIB.LIB: QMSG.OBJ OUTHEXES.OBJ BACKGRND.OBJ DOSLIST.OBJ KEEP.OBJ OUTCH.OBJ \
+OUTHEX.OBJ OUTS.OBJ OUTSN.OBJ INTEL.OBJ INCHKSUM.OBJ QMOVE.OBJ QCMP.OBJ \
+SEMAPHOR.OBJ TIMEOUT.OBJ STRINGS.OBJ ISSTRING.OBJ
+

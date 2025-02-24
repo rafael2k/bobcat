@@ -1,0 +1,1 @@
+int sendmail(char *c);

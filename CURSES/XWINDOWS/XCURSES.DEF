@@ -1,0 +1,16 @@
+!
+! resources for Xcurses class of programs
+!
+Xcurses*lines:	24
+Xcurses*cols:	80
+Xcurses*font:	12x24
+Xcurses*boldfont:	12x24
+Xcurses.*icon:	/tmp/xcurses.xbm
+!
+! resources for THE - Xcurses 
+!
+!Xcurses.the.color1:	Cyan
+Xcurses.the.font:	9x15
+Xcurses.the.boldfont:	9x15bold
+Xcurses.the.lines:	30
+Xcurses.the.icon:	/tmp/xcurses.xbm

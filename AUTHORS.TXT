@@ -1,0 +1,13 @@
+WATTCP        erick@sail.uwaterloo.ca
+
+DOSLYNX/LYNX  grobe@raven.cc.ukans.edu
+
+Spawno        ralf+@cs.cmu.edu
+
+LIBWWW        libwww@w3.org
+
+PDCurses 2.0  M.Hessling@itc.gu.edu.au
+
+Bobcat        bobcat@fdisk.com
+
+

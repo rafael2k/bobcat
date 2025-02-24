@@ -1,0 +1,13 @@
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+pcpkt.c:
+Warning pcpkt.c 230: Call to function 'timeout_frags' with no prototype in function pkt_received
+Turbo Assembler  Version 3.1  Copyright (c) 1988, 1992 Borland International
+
+Assembling file:   pcpkt.ASM
+Error messages:    None
+Warning messages:  None
+Passes:            1
+Remaining memory:  344k
+
+
+        Available memory 4050752

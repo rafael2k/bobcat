@@ -1,0 +1,16 @@
+/*man-start*********************************************************************
+
+Introduction:
+
+	To use the Xwindows port of PDCurses (Xcurses), you need to add one
+	line to the main module of your curses program:
+	
+	char *XPDCurses_program_name = "name_of_program";
+
+	where you substitute "name_of_program" with the name of your program.
+
+X Resources:
+
+	Xcurses uses various resource settings.
+
+**man-end**********************************************************************/

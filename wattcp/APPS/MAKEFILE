@@ -1,0 +1,53 @@
+#
+#       Makefile for Waterloo TCP sample applications
+#
+
+TCCINCLUDE=L:\borlandc\include
+DEBUG= D        # set to D for disable, E for enable
+MODEL= H        # set to H for Huge, S for small
+
+#
+#
+# auto configure section
+#
+#
+
+!if '$(DEBUG)'=='E'
+IDEBUG=-v
+TEXTDEBUG=enabled
+!elif '$(DEBUG)'=='D'
+IDEBUG=-v-
+TEXTDEBUG=disabled
+#!else
+#!error  DEBUG must be set to either E or D
+!endif
+
+!if '$(MODEL)'=='H'
+CMODEL=-mh
+CLIB=..\lib\wattcphg.lib
+TEXTMODEL=huge
+!elif '$(MODEL)'=='S'
+CMODEL=-ms
+CLIB=..\lib\wattcpsm.lib
+TEXTMODEL=small
+!else
+!error  MODEL must be set to either S or H
+!endif
+
+CFLAGS= $(CMODEL) -r- $(IDEBUG) -Ic:\borlandc\include -I..\include
+CC= bcc $(CFLAGS)
+
+#
+#
+#  list of executables
+#
+#
+
+.c.exe:
+        $(CC) $*.c $(CLIB)
+
+
+exes.arc: host.exe
+
+host.exe: host.c
+        $(CC)  host.c $(CLIB)

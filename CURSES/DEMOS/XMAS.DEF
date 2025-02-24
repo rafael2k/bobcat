@@ -1,0 +1,28 @@
+NAME xmas windowcompat
+
+DESCRIPTION 'test'
+
+PROTMODE
+
+STACKSIZE 32767
+
+IMPORTS
+VioGetCurType=vio32.Vio32GetCurType
+VioSetCurType=vio32.Vio32SetCurType
+VioGetCurPos=vio32.Vio32GetCurPos
+VioSetCurPos=vio32.Vio32SetCurPos
+VioGetMode=vio32.Vio32GetMode
+VioSetMode=vio32.Vio32SetMode
+VioReadCellStr=vio32.Vio32ReadCellStr
+VioWrtTTY=vio32.Vio32WrtTTY
+VioWrtNAttr=vio32.Vio32WrtNAttr
+VioGetConfig=vio32.Vio32GetConfig
+VioScrollUp=vio32.Vio32ScrollUp
+VioWrtCellStr=vio32.Vio32WrtCellStr
+VioWrtNCell=vio32.Vio32WrtNCell
+VioWrtCharStr=vio32.Vio32WrtCharStr
+Kbd32CharIn=kbd32.Kbd32CharIn
+Kbd32Peek=kbd32.Kbd32Peek
+Kbd32FlushBuffer=kbd32.Kbd32FlushBuffer
+Kbd32GetStatus=kbd32.Kbd32GetStatus
+Kbd32SetStatus=kbd32.Kbd32SetStatus

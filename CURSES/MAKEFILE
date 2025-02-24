@@ -1,0 +1,1082 @@
+#
+#**************************************************************************
+# This file comprises part of PDCurses. PDCurses is Public Domain software.
+# You may use this code for whatever purposes you desire. This software
+# is provided AS IS with NO WARRANTY whatsoever.
+# Should this software be used in another application, an acknowledgement
+# that PDCurses code is used would be appreciated, but is not mandatory.
+#
+# Any changes which you make to this software which may improve or enhance
+# it, should be forwarded to the current maintainer for the benefit of
+# other users.
+#
+# The only restriction placed on this code is that no distribution of
+# modified PDCurses code be made under the PDCurses name, by anyone
+# other than the current maintainer.
+#
+# See the file maintain.er for details of the current maintainer.
+#**************************************************************************
+#
+# $Id$
+#================ PDCurses makefile for DMAKE 3.8 ======================
+# This makefile is for DMAKE, either under DOS or OS/2
+# The following OS/Compiler combinations are supported:
+#
+# Target  Compiler    Command                     Compiler
+# O/S     Mnemonic    Line
+# System
+#-----------------------------------------------------------------------
+# DOS       BCC       OS=DOS COMP=BCC             Borland C++
+# DOS       TCC       OS=DOS COMP=TCC             Borland Turbo C++
+# DOS       TC        OS=DOS COMP=TC              Borland Turbo C
+# DOS       MSC       OS=DOS COMP=MSC             Microsoft C
+# DOS       QCC       OS=DOS COMP=QCC             Microsoft Quick C with QCC
+# DOS       QCL       OS=DOS COMP=QCL             Microsoft Quick C with QCL
+# DOS       MX386     OS=DOS COMP=MX386           Microway NDP C/C++
+# DOS       WATCOMC   OS=DOS COMP=WATCOMC         Watcom C + Rational DOS Extender
+# DOS       GO32      OS=DOS COMP=GCC             DJGPP gnu C
+# OS2       CSET2     OS=OS2 COMP=ICC             IBM C Set/2
+# OS2       BCC       OS=OS2 COMP=BCC             Borland C++
+# OS2       MSC       OS=OS2 COMP=MSC             Microsoft C
+# OS2       EMX       OS=OS2 COMP=EMX             emx/gcc
+# OS2       TSC       OS=OS2 COMP=TSC             TopSpeed C
+# X11       GCC       OS=X11  TOS=LINUX COMP=GCC  GNU C under LINUX
+# X11       GCC       OS=X11  TOS=SYSVR4 COMP=GCC  GNU C under SYSVR4
+#-----------------------------------------------------------------------
+# Special case for Microsoft Compiler when the host OS is DOS and the
+# target OS is OS2:
+# Command line will be OS=DOS COMP=MSC TOS=OS2
+#-----------------------------------------------------------------------
+# Change the following line to specify the memory model used.
+# Valid values: 
+#  (L - LARGE) (M - MEDIUM) (S - SMALL) (H - HUGE) (T - TINY) (C - COMPACT)
+#  Not all memory models may be available for a particular compiler.
+#-----------------------------------------------------------------------
+MODEL = H
+.IF $(MODEL) == L
+    model = l
+    SIZE = LARGE
+.ELIF $(MODEL) == M
+    model = m
+    SIZE = MEDIUM
+.ELIF $(MODEL) == S
+    model = s
+    SIZE = SMALL
+.ELIF $(MODEL) == T
+    model = t
+    SIZE = TINY
+.ELIF $(MODEL) == H
+    model = h
+    SIZE = HUGE
+.ELIF $(MODEL) == C
+    model = c
+    SIZE = COMPACT
+.END
+#-----------------------------------------------------------------------
+# For CSET2 and OS/2, target to build: LIB or DLL
+LIBTYPE = LIB
+#-----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+# default setup for BCC under DOS, optimised version
+# change values below or override with -e switch on command line
+#-----------------------------------------------------------------------
+OS=DOS
+COMP=BCC
+OPT=Y
+#-----------------------------------------------------------------------
+VER = 22
+#-----------------------------------------------------------------------
+.IF $(TOS) == $(NULL)
+    TOS = $(OS)
+.END
+.IF $(OS) == OS2
+#========================================================================
+#========================== OS2 - ICC ===================================
+#========================================================================
+    .IF $(COMP) == ICC
+        LINK      = link386
+        CC        = icc
+        LIB_EXE   = lib
+        LIB_DIR   = g:\ibmc\lib
+        SETARGV   = $(LIB_DIR)\setargv
+        .IF $(OPT) == N
+            CDEBUG = -Q+ -O- -DPDCDEBUG -Ti
+            LDEBUG = /DEBUG /NOE /SE:160 /PMTYPE:VIO
+            DBG    =d
+        .ELSE
+            CDEBUG  = -Q+ -O+ 
+            LDEBUG  = /NOE /SE:160 /PMTYPE:VIO
+            DBG     =o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)
+        OBJ_DIR  = o$(DBG)\\
+        PDCLIB   = curses$(DBG).lib
+        PANLIB   = panel$(DBG).lib
+        LIBFILES = curseso.lib panelo.lib
+        LIBZIP   = os2icc$(VER)
+        LIBRSP   =,lib.map;
+        CFLAGS   = $(CDEBUG) -Fo$@ -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ);
+        UTLFLAGS = $(LDEBUG) $*$(OBJ);
+        MANFLAGS = $(LDEBUG) $*$(OBJ)+$(SETARGV);
+        .IF $(LIBTYPE) == DLL
+            CFLAGSDLL= -Ge- -O+ -Q+ -Fo$@ -c -I$(PDC_INC)
+            OBJ_DIR2 = dll-obj
+            OBJ_DIR  = dll-obj\\
+            MAKE_PDC = $(LINK) @$(LRF)
+            MAKE_PAN = $(LINK) -+$(OBJ_DIR)panel$(OBJ);
+            PDCLIB   = pdcurses.dll
+            PANLIB   = panel.dll
+            DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,,$(DEMO_DIR)$*.def ;
+            PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,,$(DEMO_DIR)$*.def ;
+            TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,,$(DEMO_DIR)$*.def ;
+        .ELSE
+            DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB);
+            PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)+$(PANLIB);
+            TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB);
+        .END
+#========================================================================
+#========================= OS2 - BCC ====================================
+#========================================================================
+    .ELIF $(COMP) == BCC
+        LINK      = tlink
+        CC        = bcc
+        LIB_EXE   = tlib
+        LIB_DIR   = h:\bcos2\lib
+        INC_DIR   = h:\bcos2\include
+        WILDARGS  = $(LIB_DIR)\wildargs$(OBJ)
+        LIBFLAGS = /C /E
+        RSP       = +$(ROOTDIR)\os2-bcc.rsp
+        DEFINES   =
+        .IF $(OPT) == N
+            CDEBUG	=-N -v -y -DPDCDEBUG
+            LDEBUG	= /ap /c /v+ /Toe
+            DBG    =d
+        .ELSE
+            CDEBUG	= -O 
+            LDEBUG	= /ap /c /v- /Toe
+            DBG     =o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)
+        OBJ_DIR  = o$(DBG)\\
+        PDCLIB   = curses$(DBG).lib
+        PANLIB   = panel$(DBG).lib
+        LIBFILES = curseso.lib panelo.lib
+        LIBZIP   = os2bcc$(VER)
+        LIBRSP   =,lib.map
+        CFLAGS   = $(RSP) $(CDEBUG) $(DEFINES) -I$(PDC_INC) -I$(INC_DIR) -o$@
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) $(LIB_DIR)\c02$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c2.lib+$(LIB_DIR)\os2.lib;
+        PANFLAGS = $(LDEBUG) $(LIB_DIR)\c02$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(PANLIB)+$(LIB_DIR)\c2.lib+$(LIB_DIR)\os2.lib;
+        TUIFLAGS = $(LDEBUG) $(LIB_DIR)\c02$(OBJ)+$*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c2.lib+$(LIB_DIR)\os2.lib;
+        UTLFLAGS = $(LDEBUG) $(LIB_DIR)\c02$(OBJ)+$*$(OBJ),$*,,$(LIB_DIR)\c2.lib+$(LIB_DIR)\os2.lib;
+        MANFLAGS = $(LDEBUG) $(LIB_DIR)\c02$(OBJ)+$*$(OBJ)+$(WILDARGS),$*,,$(LIB_DIR)\c2.lib+$(LIB_DIR)\os2.lib;
+#========================================================================
+#========================= OS2 - MSC ====================================
+#========================================================================
+    .ELIF $(COMP) == MSC
+        LINK      = link
+        CC        = cl
+        LIB_EXE   = lib
+        LIB_DIR   = $(LIB)
+        SETARGV   = $(LIB_DIR)\setargv
+        DEFINES   = -D__OS2__ -D$(SIZE)
+        .IF $(OPT) == N
+            CDEBUG = -J -nologo -Od -Zi -A$(MODEL) -DPDCDEBUG
+            LDEBUG = /CO /NOE /SE:160 /PMTYPE:VIO
+            DBG    = d
+        .ELSE
+            CDEBUG  = -J -nologo -Ox -A$(MODEL)
+            LDEBUG  = /NOE /SE:160 /PMTYPE:VIO
+            DBG     = o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(MODEL)
+        OBJ_DIR  = o$(DBG)$(MODEL)\\
+        PDCLIB   = $(MODEL)curses$(DBG).lib
+        PANLIB   = $(MODEL)panel$(DBG).lib
+        LIBFILES = $(MODEL)curseso.lib $(MODEL)panelo.lib
+        LIBZIP   = os2msc$(VER)
+        LIBRSP   =,lib.map;
+        CFLAGS   = $(CDEBUG) $(DEFINES) -Fo$@ -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ);
+        DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB);
+        PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)+$(PANLIB);
+        TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB);
+        UTLFLAGS  = $(LDEBUG) $*$(OBJ);
+        MANFLAGS = $(LDEBUG) $*$(OBJ)+$(SETARGV);
+#========================================================================
+#========================= OS2 - EMX ====================================
+#========================================================================
+    .ELIF $(COMP) == EMX
+        LINK      = $(CC)
+        CC        = gcc
+        LIB_EXE   = ar
+        LIBFLAGS  = rcv
+        .IF $(OPT) == N
+            CDEBUG =-g -DPDCDEBUG
+            LDEBUG =-g
+            DBG    =d
+        .ELSE
+            CDEBUG =-O 
+            LDEBUG =-s
+            DBG    =o
+        .END
+        .IF $(VID) == EMX
+            DEFINES   = -DEMXVIDEO
+            VIDLIB    = -lvideo
+            LIBTYPE   = emx$(DBG)
+        .ELSE
+            DEFINES   = 
+            VIDLIB    = 
+            LIBTYPE   = os2$(DBG)
+        .ENDIF
+        OBJ      = .o
+        OBJ_DIR2 = $(LIBTYPE)
+        OBJ_DIR  = $(LIBTYPE)/
+        LIB_NAM  = curs$(LIBTYPE)
+        PAN_NAM  = pan$(LIBTYPE)
+        PDCLIB   = $(LIB_NAM).a
+        PANLIB   = $(PAN_NAM).a
+        LIBFILES = cursos2o.a cursemxo.a panos2o.a panemxo.a
+        LIBZIP   = os2emx$(VER)
+        CFLAGS   = $(CDEBUG) $(DEFINES) -o$(@:db).o -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(LIBFLAGS) $(PDCLIB) $(OBJ_DIR)*.o
+        MAKE_PAN = $(LIB_EXE) $(LIBFLAGS) $(PANLIB) $(OBJ_DIR)panel.o
+#        PDC_RANLIB =ar s $(PDCLIB) & emxomf -o $(LIB_NAM).lib $(PDCLIB)
+        PDC_RANLIB =$(LIB_EXE) s $(PDCLIB)
+        PAN_RANLIB =$(LIB_EXE) s $(PANLIB)
+        DLFLAGS  = $(LDEBUG) $*$(OBJ) -L. -l$(LIB_NAM) $(VIDLIB) -o $*$(EXE)
+        PANFLAGS = $(LDEBUG) $*$(OBJ) -L. -l$(LIB_NAM) -l$(PAN_NAM) $(VIDLIB) -o $*$(EXE)
+        TUIFLAGS = $(LDEBUG) $*$(OBJ) tui$(OBJ) -L. -l$(LIB_NAM) $(VIDLIB) -o $*$(EXE)
+        UTLFLAGS = $(LDEBUG) $*$(OBJ) -o $*$(EXE) $(TOOLS_DIR)$*.def
+        MANFLAGS = $(LDEBUG) $*$(OBJ) -o $*$(EXE) $(TOOLS_DIR)$*.def
+#========================================================================
+#========================= OS2 - TSC ====================================
+#========================================================================
+# If you can fill in the following, please let me know !
+#========================================================================
+    .ELIF $(COMP) == TSC
+        OBJ      = .obj
+    .END
+.ELIF $(OS) == DOS
+#========================================================================
+#========================= DOS - BCC ====================================
+#========================================================================
+    .IF $(COMP) == BCC
+        LINK      = tlink
+        CC        = bcc
+        LIB_EXE   = tlib
+        LIB_DIR   = c:\borlandc\lib
+        INC_DIR   = c:\borlandc\include
+        WILDARGS  = $(LIB_DIR)\wildargs$(OBJ)
+        LIBFLAGS = /C /E
+        RSP       = +$(ROOTDIR)\dos-bcc.rsp
+        DEFINES   =
+        .IF $(OPT) == N
+            CDEBUG	=-N -v -y -DPDCDEBUG
+            LDEBUG	=/c /v /s /l /e
+            DBG    =d
+        .ELSE
+            CDEBUG      = -O -Y -Vs -B
+            LDEBUG      = /o
+            DBG     =o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(model)
+        OBJ_DIR  = o$(DBG)$(model)\\
+        PDCLIB   = $(model)curses$(DBG).lib
+        PANLIB   = $(model)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dosbcc$(VER)
+        LIBRSP   =,lib.map
+        CFLAGS   = $(RSP) $(CDEBUG) $(DEFINES) -m$(model) -I$(PDC_INC) -I$(INC_DIR) -o$@
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        PANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(PANLIB)+$(LIB_DIR)\c$(model).lib;
+        TUIFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        UTLFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(LIB_DIR)\c$(model).lib;
+        MANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+$(WILDARGS),$*,,$(LIB_DIR)\c$(model).lib;
+#========================================================================
+#========================= DOS - TCC ====================================
+#========================================================================
+    .ELIF $(COMP) == TCC
+        LINK      = tlink
+        CC        = tcc
+        LIB_EXE   = tlib
+        LIB_DIR   = c:\c\lib
+        INC_DIR   = c:\c\include
+        WILDARGS  = $(LIB_DIR)\wildargs$(OBJ)
+        LIBFLAGS = /C /E
+        RSP       = +$(ROOTDIR)\dos-tcc.rsp
+        DEFINES   =
+        DEFINES   =
+        .IF $(OPT) == N
+            CDEBUG	=-N -v -y -DPDCDEBUG
+            LDEBUG	=/c /v /s /l /e
+            DBG    =d
+        .ELSE
+            CDEBUG	= -O
+            LDEBUG	=
+            DBG     =o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(model)
+        OBJ_DIR  = o$(DBG)$(model)\\
+        PDCLIB   = $(model)curses$(DBG).lib
+        PANLIB   = $(model)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dostcc$(VER)
+        LIBRSP   =,lib.map
+        CFLAGS   = $(RSP) $(CDEBUG) $(DEFINES) -m$(model) -I$(PDC_INC) -I$(INC_DIR) -o$@
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        PANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(PANLIB)+$(LIB_DIR)\c$(model).lib;
+        TUIFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        UTLFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(LIB_DIR)\c$(model).lib;
+        MANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+$(WILDARGS),$*,,$(LIB_DIR)\c$(model).lib;
+#========================================================================
+#========================= DOS - TC =====================================
+# This configuration courtesy of Ib Hojme (ibh@dde.dk)
+#========================================================================
+    .ELIF $(COMP) == TC
+        LINK      = tlink
+        CC        = tcc
+        LIB_EXE   = tlib
+        LIB_DIR   = c:\c\lib
+        INC_DIR   = c:\c\include
+        WILDARGS  = $(LIB_DIR)\wildargs$(OBJ)
+        LIBFLAGS = /C /E
+        RSP       = -1- -K -G -rd -d -w-eff -j0 -c
+        DEFINES   =
+        .IF $(OPT) == N
+            CDEBUG	=-N -v -y -DPDCDEBUG
+            LDEBUG	=/c /v /s /l /e
+            DBG    =d
+        .ELSE
+            CDEBUG	= -O
+            LDEBUG	=
+            DBG     =o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(model)
+        OBJ_DIR  = o$(DBG)$(model)\\
+        PDCLIB   = $(model)curses$(DBG).lib
+        PANLIB   = $(model)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dostc$(VER)
+        LIBRSP   =,lib.map
+        CFLAGS   = $(RSP) $(CDEBUG) $(DEFINES) -m$(model) -I$(PDC_INC) -I$(INC_DIR) -o$@
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        PANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(PDCLIB)+$(PANLIB)+$(LIB_DIR)\c$(model).lib;
+        TUIFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB)+$(LIB_DIR)\c$(model).lib;
+        UTLFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ),$*,,$(LIB_DIR)\c$(model).lib;
+        MANFLAGS = $(LDEBUG) $(LIB_DIR)\c0$(model)$(OBJ)+$*$(OBJ)+$(WILDARGS),$*,,$(LIB_DIR)\c$(model).lib;
+#========================================================================
+#========================= DOS - MSC ====================================
+#========================================================================
+    .ELIF $(COMP) == MSC
+        LINK      = link
+        CC        = cl
+        LIB_EXE   = lib
+        SETARGV   = $(LIB)\setargv
+        DEFINES   = -EM -D$(SIZE)
+        .IF $(TOS) == OS2
+            OS2LD     = /PMTYPE:VIO
+            DEFINES   = -D__OS2__ -D$(SIZE)
+            OS2LIB    = $(LIB)\os2.lib
+            PLUS      =+
+            MAKEEXE   = bind $*
+        .END
+        .IF $(OPT) == N
+            CDEBUG = -J -nologo -Od -Zi -A$(MODEL) -DPDCDEBUG
+            LDEBUG = /CO /NOE /SE:160 $(OS2LD)
+            DBG    = d
+        .ELSE
+            CDEBUG  = -J -nologo -Ox -A$(MODEL)
+            LDEBUG  = /NOE /SE:160 $(OS2LD)
+            DBG     = o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(MODEL)
+        OBJ_DIR  = o$(DBG)$(MODEL)\\
+        PDCLIB   = $(MODEL)curses$(DBG).lib
+        PANLIB   = $(MODEL)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dosmsc$(VER)
+        LIBRSP   =,lib.map;
+        CFLAGS   = $(CDEBUG) $(DEFINES) -Fo$@ -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ);
+        DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)$(PLUS)$(OS2LIB);
+        PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)+$(PANLIB)$(PLUS)$(OS2LIB);
+        TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB)$(PLUS)$(OS2LIB);
+        UTLFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(OS2LIB);
+        MANFLAGS = $(LDEBUG) $*$(OBJ)+$(SETARGV),$*,,$(OS2LIB);
+#========================================================================
+#========================= DOS - QCC ====================================
+#========================================================================
+    .ELIF $(COMP) == QCC
+        LINK      = link
+        CC        = qcc
+        LIB_EXE   = lib
+        SETARGV   = $(LIB)\setargv
+        DEFINES   = -D$(SIZE)
+        .IF $(OPT) == N
+            CDEBUG = -J -Od -Zi -A$(MODEL) -DPDCDEBUG
+            LDEBUG = /CO /NOE /SE:160
+            DBG    = d
+        .ELSE
+            CDEBUG  = -J -Ox -A$(MODEL)
+            LDEBUG  = /NOE /SE:160
+            DBG     = o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(MODEL)
+        OBJ_DIR  = o$(DBG)$(MODEL)\\
+        PDCLIB   = $(MODEL)curses$(DBG).lib
+        PANLIB   = $(MODEL)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dosqcc$(VER)
+        LIBRSP   =,lib.map;
+        CFLAGS   = $(CDEBUG) $(DEFINES) -Fo$@ -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ);
+        DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB);
+        PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)+$(PANLIB);
+        TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB);
+        UTLFLAGS = $(LDEBUG) $*$(OBJ);
+        MANFLAGS = $(LDEBUG) $*$(OBJ)+$(SETARGV);
+#========================================================================
+#========================= DOS - QCL ====================================
+#========================================================================
+    .ELIF $(COMP) == QCL
+        LINK      = link
+        CC        = qcl
+        LIB_EXE   = lib
+        SETARGV   = $(LIB)\setargv
+        DEFINES   = -D$(SIZE)
+        .IF $(OPT) == N
+            CDEBUG = -J -Od -Zi -A$(MODEL) -DPDCDEBUG
+            LDEBUG = /CO /NOE /SE:160
+            DBG    = d
+        .ELSE
+            CDEBUG  = -J -Ox -A$(MODEL)
+            LDEBUG  = /NOE /SE:160
+            DBG     = o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(MODEL)
+        OBJ_DIR  = o$(DBG)$(MODEL)\\
+        PDCLIB   = $(MODEL)curses$(DBG).lib
+        PANLIB   = $(MODEL)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dosqcl$(VER)
+        LIBRSP   =,lib.map;
+        CFLAGS   = $(CDEBUG) $(DEFINES) -Fo$@ -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ);
+        DLFLAGS  = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB);
+        PANFLAGS = $(LDEBUG) $*$(OBJ),$*,,$(PDCLIB)+$(PANLIB);
+        TUIFLAGS = $(LDEBUG) $*$(OBJ)+tui$(OBJ),$*,,$(PDCLIB);
+        UTLFLAGS = $(LDEBUG) $*$(OBJ);
+        MANFLAGS = $(LDEBUG) $*$(OBJ)+$(SETARGV);
+#========================================================================
+#========================= DOS - NDP ====================================
+#========================================================================
+    .ELIF $(COMP) == MX386
+        LINK      = mx386 -bind
+        CC        = mx386
+        LIB_EXE   = ndplib
+        LIBFLAGS  = -add
+        LIB_DIR   = n:\lib
+        WILDARGS  = $(LIB_DIR)\wildargs.obj  #is this needed in MANFLAGS ?
+        DEFINES   = 
+        .IF $(OPT) == N
+            CDEBUG = -N -v -y
+            LDEBUG = -c -v -s -l -e
+            DBG    = d
+        .ELSE
+            CDEBUG = -c -ansi -nansi -DMX386 -DDOS
+            LDEBUG =
+            DBG    = o
+        .END
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)$(MODEL)
+        OBJ_DIR  = o$(DBG)$(MODEL)\\
+        PDCLIB   = $(MODEL)curses$(DBG).lib
+        PANLIB   = $(MODEL)panel$(DBG).lib
+        LIBFILES = lcurseso.lib mcurseso.lib scurseso.lib lpanelo.lib mpanelo.lib spanelo.lib
+        LIBZIP   = dosndp$(VER)
+        LIBRSP   =,lib.map
+        CFLAGS   = $(CFG) $(CDEBUG) $(DEFINES) -T$(OBJ_DIR) -I$(CC_INC) -o $@
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) $(OBJ_DIR)*$(OBJ)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) -+$(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) $* -l$(PDCLIB)
+        PANFLAGS = $(LDEBUG) $*$(OBJ) -l$(PDCLIB) -l$(PANLIB)
+        TUIFLAGS = $(LDEBUG) $*$(OBJ) tui$(OBJ) -l$(PDCLIB)
+        UTLFLAGS = $(LDEBUG) $*$(OBJ)
+        MANFLAGS = $(LDEBUG) $*$(OBJ)
+#========================================================================
+#========================= DOS - WATCOMC ================================
+# This configuration courtesy of Pieter Kunst (kunst@prl.philips.nl)
+#========================================================================
+    .ELIF $(COMP) == WATCOMC
+        .IF $(OPT) == N
+            CDEBUG = /dPDCDEBUG
+            LDEBUG = debug all
+            DBG    = d
+        .ELSE
+            CDEBUG = 
+            LDEBUG =
+            DBG    = o
+        .END
+        LINK      = wlink
+        CC        = wcc386
+        LIB_EXE   = wlib
+        LIB_DIR   = c:\watcom\lib
+        LIBFLAGS  = 
+        MAKEEXE   = 
+        DEFINES   = /oneatx /zp4 /5r /i=
+        OBJ      = .obj
+        OBJ_DIR2 = o$(DBG)
+        OBJ_DIR  = o$(DBG)\\
+        PDCLIB   = curses$(DBG).lib
+        PANLIB   = panel$(DBG).lib
+        LIBFILES = $(PDCLIB) $(PANLIB)
+        LIBZIP   = doswat$(VER)
+        LIBRSP   =
+        CFLAGS   = $(CDEBUG) $(DEFINES) /fo=$(@:db)$(OBJ)
+        MAKE_PDC = $(LIB_EXE) $(PDCLIB) $(LIBFLAGS) @$(LRF)
+        MAKE_PAN = $(LIB_EXE) $(PANLIB) $(LIBFLAGS) $(OBJ_DIR2)\\panel$(OBJ)
+        PANFLAGS = $(LDEBUG) name $* file $*$(OBJ) library $(PDCLIB) library $(PANLIB)
+        TUIFLAGS = $(LDEBUG) name $* file $*$(OBJ) file tui$(OBJ) library $(PDCLIB) 
+        UTLFLAGS = $(LDEBUG) name $* file $*$(OBJ)
+        WILDARGS = c:\watcom\src\startup\wildargv.obj
+        MANFLAGS = $(LDEBUG) name $* file $(WILDARGS) file $*$(OBJ)
+#========================================================================
+#========================= DOS - DJGPP ==================================
+# This configuration courtesy of David Nugent (davidn@csource.oz.au)
+#========================================================================
+    .ELIF $(COMP) == GCC
+        LINK      = $(CC)
+        CC        = gcc
+        LIB_EXE   = ar
+        LIB_DIR   = g:/djgpp/lib
+        LIBFLAGS  = rcv
+        MAKEEXE   = coff2exe $*
+        DEFINES   =
+        .IF $(OPT) == N
+            CDEBUG = -g -DPDCDEBUG
+            LDEBUG = -g
+            DBG    = d
+        .ELSE
+            CDEBUG = -O -Wall
+            LDEBUG =
+            DBG    = o
+        .END
+        OBJ      = .o
+        OBJ_DIR2 = o$(DBG)
+        OBJ_DIR  = o$(DBG)\\
+        PDCLIB   = curses$(DBG).a
+        PANLIB   = panel$(DBG).a
+        LIBFILES = curseso.a panelo.a
+        LIBZIP   = dosgcc$(VER)
+        LIBRSP   =
+        CFLAGS   = $(CDEBUG) $(DEFINES) -o$(@:db)$(OBJ) -c -I$(PDC_INC)
+        MAKE_PDC = $(LIB_EXE) $(LIBFLAGS) $(PDCLIB) $(OBJ_DIR2)/*$(OBJ)
+        MAKE_PAN = $(LIB_EXE) $(LIBFLAGS) $(PANLIB) $(OBJ_DIR2)/panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) -L$(LIB_DIR) $*$(OBJ) $(PDCLIB) -o $*
+        PANFLAGS = $(LDEBUG) -L$(LIB_DIR) $*$(OBJ) $(PDCLIB) $(PANLIB) -o $*
+        TUIFLAGS = $(LDEBUG) -L$(LIB_DIR) $*$(OBJ) tui$(OBJ) $(PDCLIB) -o $*
+        UTLFLAGS = $(LDEBUG) -L$(LIB_DIR) $*$(OBJ) -o $*
+        MANFLAGS = $(LDEBUG) -L$(LIB_DIR) $*$(OBJ) -o $*
+        PDC_RANLIB =ranlib $(PDCLIB)
+        PAN_RANLIB =ranlib $(PANLIB)
+    .END
+.ELIF $(OS) == UNIX
+#========================================================================
+#========================= UNIX - GCC ===================================
+#========================================================================
+    .IF $(COMP) == GCC
+        CC        = gcc
+        LINK      = $(CC)
+        LIB_EXE   = ar
+        SETARGV   = 
+        DEFINES   = -DUNIX -D$(TOS) 
+        .IF $(OPT) == N
+            CDEBUG = -g -DPDCDEBUG
+            LDEBUG = -g
+            DBG    = d
+        .ELSE
+            CDEBUG  = -O
+            LDEBUG  =
+            DBG     = o
+        .END
+        OBJ      = .o
+        OBJ_DIR2 = object_$(DBG)
+        OBJ_DIR  = object_$(DBG)/
+        PDCLIB   = libpdcurses$(DBG).a
+        PANLIB   = libpanel$(DBG).a
+        LIBFILES = libpdcurseso.a libpanelo.a
+        LIBZIP   = unixgcc$(VER)
+        MYTINFO  = /home/snark/mark/mytinfo
+        MYTINFOLIB= $(MYTINFO)/libmytinfo.a
+        PDC_RANLIB = ranlib $(PDCLIB)
+        PAN_RANLIB = ranlib $(PANLIB)
+        LIBFLAGS = rv
+        CFLAGS   = $(CDEBUG) $(DEFINES) -c -I$(PDC_INC) -I$(MYTINFO) -o $@
+        MAKE_PDC = $(LIB_EXE) $(LIBFLAGS) $(PDCLIB) $(OBJ_DIR)*$(OBJ)
+        MAKE_PAN = $(LIB_EXE) $(LIBFLAGS) $(PANLIB) $(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) -o $* $*$(OBJ) $(PDCLIB) $(MYTINFOLIB)
+        PANFLAGS = $(LDEBUG) -o $* $*$(OBJ) $(PDCLIB) $(PANLIB) $(MYTINFOLIB)
+        TUIFLAGS = $(LDEBUG) -o $* $*$(OBJ) tui$(OBJ) $(PDCLIB) $(MYTINFOLIB)
+        UTLFLAGS = $(LDEBUG) -o $* $*$(OBJ)
+        MANFLAGS = $(LDEBUG) -o $* $*$(OBJ)
+    .END
+.ELIF $(OS) == X11
+#========================================================================
+#=========================  X11 - GCC ===================================
+#========================================================================
+    .IF $(COMP) == GCC
+        CC        = gcc
+        LINK      = $(CC)
+        LIB_EXE   = ar
+        SETARGV   = 
+        .IF $(TOS) == LINUX
+            DEFINES   = -DXCURSES -D$(TOS) -DHAS_USLEEP -DNO_VSSCANF -DANSI
+            XTRALIB   = -lXext -lX11
+            XTRAINC   =
+        .END
+        .IF $(TOS) == SUNOS
+            DEFINES   = -DXCURSES -D$(TOS) -DHAS_USLEEP -DNO_VSSCANF -DANSI
+            XTRALIB   = -lXext -lX11
+            XTRAINC   = -I/usr/openwin/include
+        .END
+        .IF $(TOS) == SYSVR4
+            DEFINES   = -DXCURSES -D$(TOS) -DHAS_POLL -DANSI
+            XTRALIB   = -lXext -lX11 -lsocket
+            XTRAINC   = -I/usr/openwin/include
+        .END
+        .IF $(OPT) == N
+            CDEBUG = -g -DPDCDEBUG
+            LDEBUG = -g
+            DBG    = d
+        .ELSE
+            CDEBUG  = -O
+            LDEBUG  =
+            DBG     = o
+        .END
+        OBJ      = .o
+        OBJ_DIR2 = object_$(DBG)
+        OBJ_DIR  = object_$(DBG)/
+        PDCLIB   = libxcurses$(DBG).a
+        PANLIB   = libxpanel$(DBG).a
+        LIBFILES = libxcurseso.a libxpanelo.a
+        LIBZIP   = unixgcc$(VER)
+        PDC_RANLIB = ranlib $(PDCLIB)
+        PAN_RANLIB = ranlib $(PANLIB)
+        LIBFLAGS = rv
+        CFLAGS   = $(CDEBUG) $(DEFINES) -c -I$(PDC_INC) $(XTRAINC) -o $@
+        MAKE_PDC = $(LIB_EXE) $(LIBFLAGS) $(PDCLIB) $(OBJ_DIR)*$(OBJ)
+        MAKE_PAN = $(LIB_EXE) $(LIBFLAGS) $(PANLIB) $(OBJ_DIR)panel$(OBJ)
+        DLFLAGS  = $(LDEBUG) -o $* $*$(OBJ) $(PDCLIB) $(XTRALIB)
+        PANFLAGS = $(LDEBUG) -o $* $*$(OBJ) $(PDCLIB) $(PANLIB) $(XTRALIB)
+        TUIFLAGS = $(LDEBUG) -o $* $*$(OBJ) tui$(OBJ) $(PDCLIB) $(XTRALIB)
+        UTLFLAGS = $(LDEBUG) -o $* $*$(OBJ)
+        MANFLAGS = $(LDEBUG) -o $* $*$(OBJ)
+    .END
+.END
+#-----------------------------------------------------------------------
+CFLAGSLIB = $(CFLAGS)
+.IF $(OS) == X11
+    DIRSEP = /
+    EXE       =
+    RM        = rm
+    ADDLRF    =
+    ROOTDIR   = .$(DIRSEP)
+    RMLRF     = $(LIB_EXE) d $(PDCLIB) $(OBJ_DIR)panel.o
+.ELSE
+    DIRSEP    = \\
+    EXE       = .exe
+    LRF       = PDCURSES.LRF
+    ENDLIB    = +echo $(LIBRSP) >> $(LRF)
+    ADDLRF    = buildlrf $(LIBTYPE) -+$@ $(LRF)
+    RM        = del
+    RMLRF     = $(RM) $(LRF)
+    .IF $(COMP) == GCC
+        DIRSEP = /
+        ENDLIB    = +-del $(PDCLIB)
+        ADDLRF    = 
+        RMLRF     = $(LIB_EXE) d $(PDCLIB) $(OBJ_DIR)panel.o
+    .END
+    .IF $(COMP) == WATCOMC
+        ENDLIB    = 
+        ADDLRF    = echo +$@ >>$(LRF)
+    .END
+    .IF $(COMP) == EMX
+        DIRSEP = /
+        ENDLIB    = +-del $(PDCLIB)
+        ADDLRF    = 
+        RMLRF     = $(LIB_EXE) d $(PDCLIB) $(OBJ_DIR)panel.o
+    .END
+    .IF $(COMP) == MX386
+        ENDLIB    = 
+        ADDLRF    = 
+        RMLRF     =
+    .END
+    .IF $(COMP) == ICC
+        .IF $(LIBTYPE) == DLL
+            EXTRALIB  = +copy $(ROOTDIR)pdcurses.lnk $(LRF)
+            ENDLIB    = +echo $(PDCLIB),pdcurses.map,,$(ROOTDIR)pdcurses.def >> $(LRF)
+            ADDLRF    = 
+            CFLAGSLIB = $(CFLAGSDLL)
+        .END
+    .END
+    ROOTDIR   = c:$(DIRSEP)curses$(DIRSEP)
+    ARCHDIR   = .$(DIRSEP)
+.END
+
+PDC_INC   = $(ROOTDIR)
+PORT_DIR  = $(ROOTDIR)portable$(DIRSEP)
+PRIV_DIR  = $(ROOTDIR)private$(DIRSEP)
+FLEX_DIR  = $(ROOTDIR)flexos$(DIRSEP)
+UNIX_DIR  = $(ROOTDIR)unix$(DIRSEP)
+TOOLS_DIR = $(ROOTDIR)tools$(DIRSEP)
+DEMO_DIR  = $(ROOTDIR)demos$(DIRSEP)
+DOC_DIR   = $(ROOTDIR)doc$(DIRSEP)
+PANEL_DIR = $(ROOTDIR)panel$(DIRSEP)
+XWINDOWS_DIR = $(ROOTDIR)xwindows$(DIRSEP)
+
+ROOT_RCS  = $(ARCHDIR)rcs$(DIRSEP)
+PORT_RCS  = $(ARCHDIR)portable$(DIRSEP)rcs$(DIRSEP)
+PRIV_RCS  = $(ARCHDIR)private$(DIRSEP)rcs$(DIRSEP)
+FLEX_RCS  = $(ARCHDIR)flexos$(DIRSEP)rcs$(DIRSEP)
+UNIX_RCS  = $(ARCHDIR)unix$(DIRSEP)rcs$(DIRSEP)
+TOOLS_RCS = $(ARCHDIR)tools$(DIRSEP)rcs$(DIRSEP)
+DEMO_RCS  = $(ARCHDIR)demos$(DIRSEP)rcs$(DIRSEP)
+DOC_RCS   = $(ARCHDIR)doc$(DIRSEP)rcs$(DIRSEP)
+PANEL_RCS = $(ARCHDIR)panel$(DIRSEP)rcs$(DIRSEP)
+XWINDOWS_RCS = $(ARCHDIR)xwindows$(DIRSEP)rcs$(DIRSEP)
+
+PORT_ARCH  = $(ARCHDIR)portable$(DIRSEP)
+PRIV_ARCH  = $(ARCHDIR)private$(DIRSEP)
+FLEX_ARCH  = $(ARCHDIR)flexos$(DIRSEP)
+UNIX_ARCH  = $(ARCHDIR)unix$(DIRSEP)
+TOOLS_ARCH = $(ARCHDIR)tools$(DIRSEP)
+DEMO_ARCH  = $(ARCHDIR)demos$(DIRSEP)
+DOC_ARCH   = $(ARCHDIR)doc$(DIRSEP)
+PANEL_ARCH = $(ARCHDIR)panel$(DIRSEP)
+XWINDOWS_ARCH = $(ARCHDIR)xwindows$(DIRSEP)
+#######################################################################
+#<<<<<< Nothing below here should need to be changed >>>>>>>>>>>>>>>>>>
+#######################################################################
+#
+#   Header Files
+#
+HEADERS = $(PDC_INC)curses.h $(PDC_INC)curspriv.h $(PDC_INC)cursos2.h
+ARCHEADERS = $(ARCHDIR)curses.h $(ARCHDIR)curspriv.h $(ARCHDIR)cursos2.h
+
+#######################################################################
+########################## First (default) target #####################
+#######################################################################
+all:    $(PDCLIB) $(PANLIB) demos manual
+#######################################################################
+############################ Just the libraries #######################
+#######################################################################
+pdcurses:    $(PDCLIB) $(PANLIB)
+#######################################################################
+############################ Demo Programs Targets ####################
+#######################################################################
+demos:  $(PDCLIB) xmas$(EXE) newdemo$(EXE) testcurs$(EXE) firework$(EXE) tuidemo$(EXE) ptest$(EXE)
+
+newdemo$(EXE):    $(PDCLIB) newdemo$(OBJ)
+	        $(LINK) $(DLFLAGS)
+	        $(MAKEEXE)
+
+xmas$(EXE):       $(PDCLIB) xmas$(OBJ)
+	        $(LINK) $(DLFLAGS)
+	        $(MAKEEXE)
+
+testcurs$(EXE):   $(PDCLIB) testcurs$(OBJ)
+	        $(LINK) $(DLFLAGS)
+	        $(MAKEEXE)
+
+firework$(EXE):   $(PDCLIB) firework$(OBJ)
+	        $(LINK) $(DLFLAGS)
+	        $(MAKEEXE)
+
+tuidemo$(EXE):   $(PDCLIB) tuidemo$(OBJ) tui$(OBJ)
+	        $(LINK) $(TUIFLAGS)
+	        $(MAKEEXE)
+
+ptest$(EXE):   $(PDCLIB) $(PANLIB) ptest$(OBJ)
+	        $(LINK) $(PANFLAGS)
+	        $(MAKEEXE)
+
+test$(EXE):   $(PDCLIB) test$(OBJ)
+	        $(LINK) $(DLFLAGS)
+	        $(MAKEEXE)
+
+
+newdemo$(OBJ):   $(HEADERS) $(DEMO_DIR)newdemo.c
+	        $(CC) $(CFLAGS) $(DEMO_DIR)newdemo.c
+
+xmas$(OBJ):      $(HEADERS)  $(DEMO_DIR)xmas.c
+	        $(CC) $(CFLAGS) $(DEMO_DIR)xmas.c
+
+testcurs$(OBJ):  $(HEADERS)  $(DEMO_DIR)testcurs.c
+	        $(CC) $(CFLAGS) $(DEMO_DIR)testcurs.c
+
+firework$(OBJ):  $(HEADERS)  $(DEMO_DIR)firework.c
+	        $(CC) $(CFLAGS) $(DEMO_DIR)firework.c
+
+tuidemo$(OBJ):  $(HEADERS)  $(DEMO_DIR)tuidemo.c $(PDC_INC)tui.h
+	        $(CC) $(CFLAGS) $(DEMO_DIR)tuidemo.c
+
+tui$(OBJ):  $(HEADERS)  $(DEMO_DIR)tui.c $(PDC_INC)tui.h
+	        $(CC) $(CFLAGS) $(DEMO_DIR)tui.c
+
+ptest$(OBJ):  $(HEADERS)  $(PDC_INC)panel.h $(DEMO_DIR)ptest.c
+	        $(CC) $(CFLAGS) $(DEMO_DIR)ptest.c
+
+test$(OBJ):  $(HEADERS)  test.c
+	        $(CC) $(CFLAGS) test.c
+
+#######################################################################
+######################### Utility Program  Targets ####################
+#######################################################################
+
+buildlrf$(EXE):   buildlrf$(OBJ)
+	        $(LINK) $(UTLFLAGS)
+	        $(MAKEEXE)
+
+buildlrf$(OBJ): $(TOOLS_DIR)buildlrf.c
+	        $(CC) $(CFLAGS) $(TOOLS_DIR)buildlrf.c
+
+manext$(EXE):   manext$(OBJ)
+	        $(LINK) $(MANFLAGS)
+	        $(MAKEEXE)
+
+manext$(OBJ): $(TOOLS_DIR)manext.c
+	        $(CC) $(CFLAGS) $(TOOLS_DIR)manext.c
+
+#######################################################################
+######################### Library Program  Targets ####################
+#######################################################################
+#
+#       Portable Curses Functions
+#
+PORTABLE = \
+$(OBJ_DIR)addch$(OBJ)    $(OBJ_DIR)addstr$(OBJ)   $(OBJ_DIR)attr$(OBJ)      \
+$(OBJ_DIR)beep$(OBJ)     $(OBJ_DIR)bkgd$(OBJ)     $(OBJ_DIR)addchstr$(OBJ)  \
+$(OBJ_DIR)border$(OBJ)   $(OBJ_DIR)clear$(OBJ)                              \
+$(OBJ_DIR)color$(OBJ)    $(OBJ_DIR)delch$(OBJ)    $(OBJ_DIR)deleteln$(OBJ)  \
+$(OBJ_DIR)getch$(OBJ)    $(OBJ_DIR)getstr$(OBJ)   $(OBJ_DIR)getyx$(OBJ)     \
+$(OBJ_DIR)inch$(OBJ)     $(OBJ_DIR)initscr$(OBJ)  $(OBJ_DIR)inopts$(OBJ)    \
+$(OBJ_DIR)insch$(OBJ)    $(OBJ_DIR)instr$(OBJ)    $(OBJ_DIR)insstr$(OBJ)    \
+$(OBJ_DIR)kernel$(OBJ)   $(OBJ_DIR)move$(OBJ)     $(OBJ_DIR)inchstr$(OBJ)   \
+$(OBJ_DIR)outopts$(OBJ)  $(OBJ_DIR)overlay$(OBJ)  $(OBJ_DIR)pad$(OBJ)       \
+$(OBJ_DIR)printw$(OBJ)   $(OBJ_DIR)refresh$(OBJ)  $(OBJ_DIR)scanw$(OBJ)     \
+$(OBJ_DIR)scroll$(OBJ)   $(OBJ_DIR)termattr$(OBJ) $(OBJ_DIR)terminfo$(OBJ)  \
+$(OBJ_DIR)touch$(OBJ)    $(OBJ_DIR)util$(OBJ)     $(OBJ_DIR)window$(OBJ)
+
+#
+#               Non-portable PDCurses Functions
+#
+XXXPORT = $(OBJ_DIR)border$(OBJ)   $(OBJ_DIR)breakcha$(OBJ) $(OBJ_DIR)cursoff$(OBJ)  \
+          $(OBJ_DIR)curson$(OBJ)   $(OBJ_DIR)mvwinser$(OBJ) $(OBJ_DIR)rawout$(OBJ)   \
+          $(OBJ_DIR)resize$(OBJ)   $(OBJ_DIR)resizew$(OBJ)  $(OBJ_DIR)tabsize$(OBJ)  \
+          $(OBJ_DIR)waddraws$(OBJ) $(OBJ_DIR)wborder$(OBJ)  $(OBJ_DIR)wbox$(OBJ)     \
+          $(OBJ_DIR)winprint$(OBJ) $(OBJ_DIR)wordchar$(OBJ) $(OBJ_DIR)wtabsize$(OBJ) \
+          $(OBJ_DIR)hline$(OBJ)    $(OBJ_DIR)vline$(OBJ)  $(OBJ_DIR)whline$(OBJ)     \
+          $(OBJ_DIR)wvline$(OBJ)
+
+#
+#               Private (Internal) PDCurses Functions
+#
+PRIVATE = \
+$(OBJ_DIR)pdcdebug$(OBJ) $(OBJ_DIR)pdcdisp$(OBJ)  $(OBJ_DIR)pdcgetsc$(OBJ) \
+$(OBJ_DIR)pdcgo32$(OBJ)  $(OBJ_DIR)pdckbd$(OBJ)   $(OBJ_DIR)pdcprint$(OBJ) \
+$(OBJ_DIR)pdcscrn$(OBJ)  $(OBJ_DIR)pdcsetsc$(OBJ) $(OBJ_DIR)pdcutil$(OBJ)  \
+$(OBJ_DIR)pdcwin$(OBJ)   
+
+#
+#       PDCurses function specific to the FlexOS Operating System
+#
+.IF $(OS) == FLEXOS
+FLEXOS = $(OBJ_DIR)_16bitmo$(OBJ) $(OBJ_DIR)_8bitmod$(OBJ) $(OBJ_DIR)_gname$(OBJ)
+.END
+
+#
+#       PDCurses function specific to Unix
+#
+.IF $(OS) == UNIX
+UNIX = $(OBJ_DIR)_kbhit$(OBJ) $(OBJ_DIR)_setkeys$(OBJ)
+.END
+
+#
+#       PDCurses function specific to Xwindows
+#
+XWINDOWS = $(OBJ_DIR)xwindows$(OBJ)
+
+
+$(PDCLIB): buildlrf$(EXE) $(OBJ_DIR2) $(HEADERS) $(PORTABLE) $(NONPORT) $(PRIVATE) $(FLEXOS) $(UNIX) $(XWINDOWS)
+	        $(EXTRALIB)
+	        $(ENDLIB)
+	        $(MAKE_PDC)
+	        $(PDC_RANLIB)
+	        +-$(RMLRF)
+
+$(PANLIB): buildlrf$(EXE) $(OBJ_DIR2) $(HEADERS) $(PDC_INC)panel.h $(OBJ_DIR)panel$(OBJ)
+	        $(MAKE_PAN)
+	        $(PAN_RANLIB)
+
+$(OBJ_DIR2):
+	        +-mkdir $(OBJ_DIR2)
+#
+#       Refresh library response file and build library
+#
+lib:    $(PDCLIB)
+	        +if exist $(PDCLIB) del $(PDCLIB)
+	        +if exist $(LRF) del $(LRF)
+	        +for %%f in ($(OBJ_DIR)*$(OBJ)) do buildlrf $(LIBTYPE) +%%f $(LRF)
+	        $(EXTRALIB)
+	        $(ENDLIB)
+	        $(MAKE_PDC)
+	        $(PDC_RANLIB)
+	        +if exist $(LRF) del $(LRF)
+
+#
+#       Object Module Targets
+#
+
+# PORTABLE
+$(OBJ_DIR)%$(OBJ): $(PORT_DIR)%.c 
+	          $(CC) $(CFLAGSLIB) $<
+	          -$(ADDLRF)
+
+# NONPORT
+
+#$(OBJ_DIR)%$(OBJ): $(NONP_DIR)%.c 
+#	            $(CC) $(CFLAGSLIB) $<
+#	            -$(ADDLRF)
+
+# PRIVATE
+
+$(OBJ_DIR)%$(OBJ): $(PRIV_DIR)%.c  
+	          $(CC) $(CFLAGSLIB) $<
+	          -$(ADDLRF)
+
+# PANEL
+
+$(OBJ_DIR)%$(OBJ): $(PANEL_DIR)%.c 
+	          $(CC) $(CFLAGSLIB) $<
+
+# FLEXOS
+
+$(OBJ_DIR)%$(OBJ): $(FLEX_DIR)%.c  
+	          $(CC) $(CFLAGSLIB) $<
+	          -$(ADDLRF)
+
+# UNIX
+
+$(OBJ_DIR)%$(OBJ): $(UNIX_DIR)%.c  
+	          $(CC) $(CFLAGSLIB) $<
+	          -$(ADDLRF)
+
+# XWINDOWS
+
+$(OBJ_DIR)%$(OBJ): $(XWINDOWS_DIR)%.c
+	          $(CC) $(CFLAGSLIB) $<
+	          -$(ADDLRF)
+
+#######################################################################
+######################### Documentation Targets #######################
+#######################################################################
+
+manual: manext$(EXE)
+	manext $(DOC_DIR)intro.man 			> PDCurses.man
+	manext $(DOC_DIR)overview.man 			>> PDCurses.man
+	+echo .......=================================== >> PDCurses.man
+	+echo .......PDCurses Definitions and Variables:	>> PDCurses.man
+	+echo .......=================================== >> PDCurses.man
+	manext $(PDC_INC)curses.h $(FFLAGS)	>> PDCurses.man
+	+echo .......============================ >> PDCurses.man
+	+echo .......Portable PDCurses Functions:		>> PDCurses.man
+	+echo .......============================ >> PDCurses.man
+	manext $(PORT_DIR)*.c >> PDCurses.man
+#	+echo .......================================ >> PDCurses.man
+#	+echo .......Non-portable PDCurses Functions:		>> PDCurses.man
+#	+echo .......================================ >> PDCurses.man
+#	manext $(NONP_DIR)*.c >> PDCurses.man
+	+echo .......============================ >> PDCurses.man
+	+echo .......Internal PDCurses Functions:		>> PDCurses.man
+	+echo .......============================ >> PDCurses.man
+	manext $(PRIV_DIR)*.c >> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	+echo .......PDCurses Flexos Functions:		>> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	manext $(FLEX_DIR)*.c >> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	+echo .......PDCurses Unix Functions:		>> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	manext $(UNIX_DIR)*.c >> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	+echo .......PDCurses Panel Functions:		>> PDCurses.man
+	+echo .......========================== >> PDCurses.man
+	manext $(PANEL_DIR)*.c >> PDCurses.man
+	+echo .......======================== >> PDCurses.man
+	+echo .......Xwindows considerations:		>> PDCurses.man
+	+echo .......======================== >> PDCurses.man
+	manext $(DOC_DIR)xwindows.man 			>> PDCurses.man
+
+#######################################################################
+######################### Maintenance Targets #########################
+#######################################################################
+clean:
+	+$(RM) PDCurses.ar? 
+	+$(RM) $(OBJ_DIR)*$(OBJ)
+
+zoo:
+	zoo a pdcurs$(VER) $(ARCHDIR)readme.2? $(ARCHDIR)maintain.er $(ARCHDIR)makefile  $(ARCHEADERS) $(ARCHDIR)panel.h
+	zoo a pdcurs$(VER) $(ARCHDIR)tui.h $(ARCHDIR)pdcurses.def $(ARCHDIR)pdcurses.lnk $(DOC_ARCH)*.man
+	zoo a pdcurs$(VER) $(PORT_ARCH)*.c $(PRIV_ARCH)*.c $(PANEL_ARCH)*.c $(XWINDOWS_ARCH)*.c $(XWINDOWS_ARCH)*.def
+	zoo a pdcurs$(VER) $(FLEX_ARCH)*.c $(UNIX_ARCH)*.c $(DEMO_ARCH)*.c $(DEMO_ARCH)*.def
+	zoo a pdcurs$(VER) $(TOOLS_ARCH)*.c $(TOOLS_ARCH)*.def $(TOOLS_ARCH)*.ini $(ARCHDIR)*.rsp
+
+zip:
+	zip pdcurs$(VER) $(ARCHDIR)readme.2? $(ARCHDIR)maintain.er $(ARCHDIR)makefile $(ARCHEADERS) $(ARCHDIR)panel.h
+	zip pdcurs$(VER) $(ARCHDIR)tui.h $(ARCHDIR)pdcurses.def $(ARCHDIR)pdcurses.lnk $(DOC_ARCH)*.man
+	zip pdcurs$(VER) $(PORT_ARCH)*.c $(PRIV_ARCH)*.c $(PANEL_ARCH)*.c 
+	zip pdcurs$(VER) $(XWINDOWS_ARCH)*.c $(XWINDOWS_ARCH)*.def
+	zip pdcurs$(VER) $(FLEX_ARCH)*.c $(UNIX_ARCH)*.c $(DEMO_ARCH)*.c $(DEMO_ARCH)*.def 
+	zip pdcurs$(VER) $(TOOLS_ARCH)*.c $(TOOLS_ARCH)*.def $(TOOLS_ARCH)*.ini $(ARCHDIR)*.rsp
+
+ziplib: $(LIBFILES) manual
+	zip -j $(LIBZIP) $(ARCHDIR)readme.2? $(ARCHDIR)maintain.er $(ARCHEADERS) $(ARCHDIR)panel.h
+	zip -j $(LIBZIP) $(LIBFILES) PDCurses.man
+
+tar:
+	tar cvf pdcurs$(VER).tar $(ARCHDIR)readme.2? $(ARCHDIR)maintain.er $(ARCHDIR)makefile $(ARCHEADERS) $(ARCHDIR)panel.h  \
+	$(ARCHDIR)tui.h $(ARCHDIR)pdcurses.def $(ARCHDIR)pdcurses.lnk $(DOC_ARCH)*.man                                      \
+	$(PORT_ARCH)*.c $(PRIV_ARCH)*.c $(PANEL_ARCH)*.c \
+	$(XWINDOWS_ARCH)*.c $(XWINDOWS_ARCH)*.def      \
+	$(FLEX_ARCH)*.c $(UNIX_ARCH)*.c $(DEMO_ARCH)*.c $(DEMO_ARCH)*.def        \
+	$(TOOLS_ARCH)*.c $(TOOLS_ARCH)*.def $(TOOLS_ARCH)*.ini $(ARCHDIR)*.rsp
+	compress pdcurs$(VER).tar
+
+ziprcs:
+	zip cursrcs $(ROOT_RCS)* $(DOC_RCS)* $(TOOLS_RCS)*
+	zip cursrcs $(PORT_RCS)* $(PRIV_RCS)*
+	zip cursrcs $(FLEX_RCS)* $(UNIX_RCS)* $(DEMO_RCS)*
+	zip cursrcs $(PANEL_RCS)*

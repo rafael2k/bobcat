@@ -1,0 +1,32 @@
+History of Changes to Bobcat
+.......................................................................
+17 Sept. 1997   Fifth Issue E-05
+
+- "z" key - interrupt properly stops download and displays what is received
+- "ctl-g" - interrupt stops download and displays current screen
+- "Ctl-c" - restarts download if slow. Display can be cleaned up with ctl-l
+- Made "g"o to line editable.
+- Previously accessed site URL's now continuously saved to history.htm file
+- Change made to lynx.cfg to control the history.htm log file.
+- Eliminated the use of floating point variables in Bobcat
+  (speedup for PC's without math coprocessors)
+- Changed message when lynx.cfg not found, indicating to run newuser.bat
+- Fixed "no entry" input on "g"
+.......................................................................
+9 June 1997     Fourth Issue E-04
+
+Fixed "g" problem to allow external from "g" input 
+Fixed Mime interpretation problem when servers sent "type text/html"
+Added cursor left to pop up boxes for braile readers
+Added configurable sleep times for Bobcat info messages.
+.......................................................................
+13 May 1997     Third Issue E-03
+
+Fixed colors on pull down menus
+Mods to  allow most CGA monitors to work with Bobcat
+......................................................................
+24 Feb 1997     Second Issue E-02
+
+Major revisions to Wattcp for much improved operation
+......................................................................
+3 Feb 1997      First issue E-01
