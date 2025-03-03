@@ -120,7 +120,7 @@
  * note: STARTFILE must be a URL.  See the Lynx online help for more
  *       information on URL's
  */
-#define STARTFILE "http://www.fdisk.com/doslynx/"
+#define STARTFILE "http://frogfind.com/"
 /* #define STARTFILE "http://www.w3.org/default.html" */
 /* #define STARTFILE "http://kufacts.cc.ukans.edu/cwis/kufacts_start.html" */
 
@@ -136,7 +136,7 @@
  * http://kufacts.cc.ukans.edu/lynx_help/lynx_help_main.html
  * This file will be updated as needed.
  */
-#define HELPFILE "http://www.fdisk.com/doslynx/help/"
+#define HELPFILE "http://web.mit.edu/infoagents/src/lynx-2.7.1/lynx_help/Lynx_users_guide.html"
 
 /*****************************
  * JUMPFILE is the local file checked for shortcut URL's when the
@@ -164,7 +164,7 @@
  * An index to your CWIS can be placed here or a document containing
  * pointers to lots of interesting places on the web.
  */
-#define DEFAULT_INDEX_FILE "http://www.fdisk.com/doslynx/"
+#define DEFAULT_INDEX_FILE "http://frogfind.com/"
 
 /********************************
 * The DEFAULT_CACHE_SIZE specifies the number of WWW documents to be

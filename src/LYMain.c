@@ -1,6 +1,7 @@
-#include "spawno.h"
+/*#include "spawno.h"
 #include <dos.h>
-#include <dir.h>
+#include <dir.h>*/
+
 #include "HTUtils.h"
 #include "HTInit.h"
 #include "HTFile.h"
