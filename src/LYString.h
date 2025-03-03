@@ -9,8 +9,8 @@ extern char *strstr();
 extern int get_mouse_link NOPARAMS;
 extern char * LYstrncpy PARAMS((char *dst, char *src, int n));
 extern int LYgetch NOPARAMS;
-extern int LYgetstr PARAMS((char *inputline, int hidden,
-			    int bufsize, int recall));
+extern int LYgetstr PARAMS((char *inputline, int hidden));
+			    /* int bufsize, int recall)); */
 extern char * LYstrstr PARAMS((char *chptr, char *tarptr));
 extern char * LYno_attr_char_strstr PARAMS((char *chptr, char *tarptr));
 extern char * LYno_attr_char_case_strstr PARAMS((char *chptr, char *tarptr));

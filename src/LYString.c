@@ -653,12 +653,13 @@ PUBLIC void LYRefreshEdit ARGS1(
 }
 
 
-PUBLIC int LYgetstr ARGS4(
+PUBLIC int LYgetstr ARGS2(
 	char *,		inputline,
-	int,		hidden,
-	int,		bufsize,
-	int,		recall)
+	int,		hidden)
 {
+	int		bufsize = 0;
+	int		recall = 0;
+
     int x, y, MaxStringSize;
     int ch;
     EditFieldData MyEdit;

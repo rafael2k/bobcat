@@ -33,6 +33,8 @@
 #endif /* SYSLOG_REQUESTED_URLS */
 #endif /* !VMS */
 
+#include <unistd.h>
+
 struct _HTStream {                      /* only know it as object */
     CONST HTStreamClass *       isa;
     /* ... */
