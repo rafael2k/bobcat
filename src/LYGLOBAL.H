@@ -29,7 +29,7 @@ extern char *TEMP_SPACE;
 #define ADVANCED_MODE 	  2
 extern BOOLEAN LYUseNoviceLineTwo;  /* True if TOGGLE_HELP is not mapped */
 
-#define MAX_LINE        1024     /* Hope that no widow is larger than this */
+#define MAX_LINE        512     /* Hope that no widow is larger than this */
 extern char star_string[MAX_LINE + 1]; /* from GridText.c */
 #define STARS(n) (&star_string[(MAX_LINE-1) - (n)])
 #define DIRNAMESIZE 256
