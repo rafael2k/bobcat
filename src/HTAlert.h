@@ -22,7 +22,7 @@
 */
 extern char * HTPrompt PARAMS((CONST char * Msg, CONST char * deflt));
 extern char * HTPromptPassword PARAMS((CONST char * Msg));
-extern void HTPromptUsernameAndPassword PARAMS((CONST char * Msg
+extern void HTPromptUsernameAndPassword PARAMS((CONST char * Msg,
                                                 char ** username,
                                                 char ** password));
 

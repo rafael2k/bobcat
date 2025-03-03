@@ -14,6 +14,7 @@
 #include "GridText.h"
 #include "HTFont.h"
 #include "HTAccess.h"
+#include "HTAlert.h"
 #include "HTParse.h"
 #include "HTTP.h"
 

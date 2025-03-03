@@ -186,7 +186,7 @@ extern char *incoming;
 extern char *LYUserAgent;               /* Lynx User-Agent */
 extern char *LYUserAgentFake;        /* Lynx Fake User-Agent */
 
-extern sleep_one; /* variable sleep times */
-extern sleep_two; /* variable sleep times */
-extern sleep_three; /* variable sleep times */
+extern int sleep_one; /* variable sleep times */
+extern int sleep_two; /* variable sleep times */
+extern int sleep_three; /* variable sleep times */
 #endif /* LYGLOBALDEFS_H */

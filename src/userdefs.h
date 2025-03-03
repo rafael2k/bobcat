@@ -524,7 +524,7 @@
  * many mail agents out there that won't do the right thing if there is no
  * From: line.
  */
-/* #define NO_ANONYMOUS_EMAIL TRUE; /* Don't allow anonymous From: field */
+/* #define NO_ANONYMOUS_EMAIL TRUE; */ /* Don't allow anonymous From: field */
   
 /****************************************************************
  *   Section 3.   Things that you should not change until you

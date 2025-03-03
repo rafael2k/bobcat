@@ -7,6 +7,18 @@
 #include "curses.h"
 #include <stdio.h>
 
+void waddstr(WINDOW *w, char *str)
+{
+    printw(str);
+}
+
+void addstr(char *str)
+{
+    printw(str);
+}
+
+
+
 void mvwaddch(WINDOW *w, int y, int x, int ch)
 {
     mvaddch(y, x, ch);

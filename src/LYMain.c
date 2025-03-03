@@ -27,12 +27,6 @@
 #include "LYexit.h"
 #include "LYLeaks.h"
 
-extern directvideo = 0;
-
-extern unsigned _stklen = 543210U;
-
-extern unsigned _ovrbuffer = 0x0C00U;
-
 /* ahhhhhhhhhh!! Global variables :-< */
 int sleep_one = 1; /* variable sleep times */
 int sleep_two = 2; /* variable sleep times */
@@ -216,7 +210,7 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
 	char *ptr;
 	ptr = strrchr(cdirbuffer, '\\');
 	if (ptr != NULL)
-		*ptr = NULL;
+		*ptr = 0;
     }
 
     if( cdirbuffer[strlen(cdirbuffer)-1] != '\\')

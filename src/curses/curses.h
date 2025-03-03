@@ -96,6 +96,10 @@ typedef struct window {
 
 typedef int chtype;
 
+/* for bobcat  */
+int waddstr(WINDOW *w, char *str);
+int addstr(char *str);
+
 /* partially implemented functions for ttyclock */
 void mvwaddch(WINDOW *w, int y, int x, int ch);
 void mvwaddstr(WINDOW *w, int y, int x, char *str);

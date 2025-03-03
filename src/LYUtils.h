@@ -10,7 +10,7 @@
 
 extern void statusline PARAMS((char *text));
 extern void noviceline PARAMS((int more));
-extern voiddLYFakeZap PARAMS((BOOL set));
+extern void LYFakeZap PARAMS((BOOL set));
 extern void toggle_novice_line NOPARAMS;
 extern BOOLEAN LYisLocalFile PARAMS((char *filename));
 extern BOOLEAN LYisLocalHost PARAMS((char *filename));
