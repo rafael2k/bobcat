@@ -402,7 +402,7 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
       * can be associated with post or get data.
       */
      if (argc == 2 && strcmp(argv[1], "-") == 0) {
-	 char buf[1025];
+	 char buf[513];
 	 char *argv[2];
 	 
 	 argv[0] = buf;
