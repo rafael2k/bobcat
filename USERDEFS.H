@@ -596,10 +596,10 @@
 #define MAXBASE 100       /* max length of base directory */
 #define MAXHIGHLIGHT 160 /* max length of highlighted text */
 #define MAXTARGET 130    /* max length of target string */
-#define LINESIZE 1024    /* max length of line to read from file*/
-#define MAXFNAME 1280	/* max filename length DDD/FILENAME.EXT */
+#define LINESIZE 512    /* max length of line to read from file*/
+#define MAXFNAME 640	/* max filename length DDD/FILENAME.EXT */
 #define MAXCOMMAND MAXFNAME /* max length of command should be the same */
-#define MAXHIST  512	/* number of links we remember in history */
+#define MAXHIST  256	/* number of links we remember in history */
 #define MAXLINKS 256	/* max links on one screen */
    /* traversal lookup table file, don't worry about it for now */
 #define TRAVERSE_FILE "/homea/local/lynx2-4/traverse.file"
