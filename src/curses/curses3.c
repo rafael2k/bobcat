@@ -34,6 +34,37 @@ void clrscr()
     printf("\033[H\033[J");
 }
 
+// Função attrset() simplificada
+void attrset(int attr) {
+    printf("\033[");
+
+	switch(attr)
+	{
+	case A_BOLD:
+		printf("1m");
+		break;
+	case A_UNDERLINE:
+		printf("4m");
+		break;
+#if 0
+	case A_BLINK:
+		printf("5m");
+		break
+#endif
+	case A_REVERSE:
+		printf("7m");
+		break;
+	default:
+	}
+
+
+}
+
+// Função attrset() simplificada
+void wattrset(WINDOW *w, int attr) {
+	attrset(attr);
+}
+
 
 void waddstr(WINDOW *w, char *str)
 {

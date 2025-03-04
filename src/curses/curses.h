@@ -15,6 +15,9 @@
 #define A_NORMAL        0x0000
 #define A_BLINK         0x0100
 #define A_BOLD          0x0200
+#define A_UNDERLINE     0x0400
+#define A_REVERSE       0x0800
+
 
 #define COLOR_BLACK         0
 #define COLOR_BLUE          1
@@ -96,10 +99,12 @@ typedef struct window {
 
 typedef int chtype;
 
-/* for bobcat  */
+/* for bobcat and to fill the gap for ELKS */
 int waddstr(WINDOW *w, char *str);
 int addstr(char *str);
-/* just to fill the gap for ELKS */
+void attrset(int attr);
+void wattrset(WINDOW *w, int attr);
+
 void clrscr();
 void stop_curses();
 void start_curses();

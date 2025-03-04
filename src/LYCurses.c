@@ -165,16 +165,16 @@ start_curses()
 	  init_pair(3,reverse_fore,reverse_back); /* reverse */
 	  init_pair(4,bold_fore,bold_back); /* bold */
 
-	  bkgd(COLOR_PAIR(1) | normal_bold);
+	  // bkgd(COLOR_PAIR(1) | normal_bold);
 	  erase();
 
-//	  attrset(COLOR_PAIR(1) | normal_bold);
+	  attrset(COLOR_PAIR(1) | normal_bold);
 	}
     }
 
     LYCursesON = TRUE;
     clear();
-    if(!firsttime) sock_init();
+    // if(!firsttime) sock_init();
 }
 
 void
@@ -188,7 +188,7 @@ stop_curses()
 	refresh();
 //	fflush(stdout);
 
-    if(!firsttime) sock_exit();
+    // if(!firsttime) sock_exit();
 
 	LYCursesON = FALSE;
 }
