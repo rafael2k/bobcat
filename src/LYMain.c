@@ -192,11 +192,6 @@ PRIVATE BOOLEAN stack_dump=FALSE;
 PRIVATE char *terminal=NULL;
 PRIVATE char *pgm;
 
-/* just to fill the gap for ELKS */
-void clrscr()
-{
-    printf("\033[H\033[J");
-}
 
 PUBLIC int main ARGS2(int,argc, char **,argv)
 {

@@ -10,6 +10,7 @@
 */
 
 // #include <dos.h>
+#include <unistd.h>
 #include "HTUtils.h"
 #include "HTAlert.h"
 #include "LYString.h"

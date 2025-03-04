@@ -99,6 +99,11 @@ typedef int chtype;
 /* for bobcat  */
 int waddstr(WINDOW *w, char *str);
 int addstr(char *str);
+/* just to fill the gap for ELKS */
+void clrscr();
+void stop_curses();
+void start_curses();
+int strnicmp(const char *s1, const char *s2, int n);
 
 /* partially implemented functions for ttyclock */
 void mvwaddch(WINDOW *w, int y, int x, int ch);

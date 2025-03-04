@@ -8,6 +8,7 @@
 #include "LYKeymap.h"
 
 #include <time.h>
+#include <curses.h>
 // #include <dos.h>
 
 #ifndef VMS

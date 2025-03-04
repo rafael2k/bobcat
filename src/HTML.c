@@ -11,6 +11,8 @@
 **   Being Overidden
 **
 */
+#include <unistd.h>
+
 #include "HTUtils.h"
 
 #include "HTML.h"

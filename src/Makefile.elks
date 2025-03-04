@@ -25,7 +25,7 @@ LDBASE = -bos2 -s
 LDBASE += -Wl,option -Wl,dosseg
 LDBASE += -Wl,option -Wl,start=_start
 LDBASE += -Wl,option -Wl,nodefaultlibs
-LDBASE += -Wl,option -Wl,stack=0x6000
+LDBASE += -Wl,option -Wl,stack=0x2000
 LDBASE += -Wl,option -Wl,heapsize=512
 LDFLAGS = $(LDBASE)
 LDLIBS = -Wl,library -Wl,$(TOPDIR)/libc/libc.lib -lm
@@ -40,7 +40,8 @@ BINDIR = ../elks-bin
 LOCALFLAGS = -DNDEBUG
 PROG = bobcat
 
-SRCS = Defaults.c GridText.c LYMain.c LYMainLoop.c
+SRCS = Defaults.c GridText.c LYMain.c LYMainLoop.c HTAlert.c HTML.c LYBookma.c \
+     LYCharSe.c LYClean.c LYCurses.c
 
 all: $(PROG)
 
