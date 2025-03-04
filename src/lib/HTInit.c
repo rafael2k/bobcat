@@ -6,7 +6,7 @@
 **	------------------------------------------------
 */
 
-#include "spawno.h"
+// #include "spawno.h"
 #include "HTUtils.h"
 
 /* Implements:
@@ -24,7 +24,7 @@
 #include "HTSaveTo.h"  /* LJM */
 #include "userdefs.h"
 #include "LYUtils.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYSystem.h"
 
 #include "LYexit.h"

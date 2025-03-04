@@ -42,7 +42,9 @@ PROG = bobcat
 
 # dont include  "LYCharSets.c"
 SRCS = DefaultStyle.c GridText.c LYMain.c LYMainLoop.c HTAlert.c HTML.c LYBookmark.c \
-     LYCharSets.c LYClean.c LYCurses.c
+     LYClean.c LYCurses.c LYBookmark.c LYLeaks.c lib/HTAccess.c  lib/HTAtom.c   lib/HTFile.c    lib/HTInit.c  lib/HTMLDTD.c  lib/HTParse.c   lib/HTStyle.c  lib/SGML.c \
+     lib/HTAnchor.c  lib/HTChunk.c  lib/HTFormat.c  lib/HTList.c  lib/HTMLGen.c  lib/HTString.c lib/HTRules.c lib/HTTP.c
+
 
 all: $(PROG)
 

@@ -8,8 +8,8 @@
 //		02-25-94	created
 //#include"capalloc.h"
 #include<string.h>
+#include<malloc.h>
 
-extern "C"	{
 
 void *capmalloc(size_t size)	{
 //	Purpose:	Mimic malloc with new.
@@ -19,8 +19,8 @@ void *capmalloc(size_t size)	{
 //	Remarks/Portability/Dependencies/Restrictions:
 //	Revision History:
 //		02-25-94	created
-
-	return((void *)new char[size]);
+	return malloc(size); // by rafael2k for elks - 2025
+	//return((void *)new char[size]);
 }
 
 void *capcalloc(size_t nitems, size_t size)	{
@@ -34,6 +34,8 @@ void *capcalloc(size_t nitems, size_t size)	{
 //	Revision History:
 //		02-25-94	created
 
+	return malloc(nitems * size);
+#if 0 // removed by rafael2k - 2025
 	//	Allocate and initialize the block.
 	char *cp_block = new char[nitems * size];
 	if(cp_block == NULL)	{
@@ -45,6 +47,7 @@ void *capcalloc(size_t nitems, size_t size)	{
 	}
 
 	return((void *)cp_block);
+#endif
 }
 
 void capfree(void *block)	{
@@ -57,8 +60,8 @@ void capfree(void *block)	{
 //		will be undefined.
 //	Revision History:
 //		02-25-94	created
-
-	delete[]((char *)block);
+	free(block);
+	// delete[]((char *)block);
 }
 
 
@@ -75,6 +78,9 @@ void *caprealloc(void *block, size_t size)	{
 //	Revision History:
 //		02-25-94	created
 
+	return realloc(block, size);
+
+#if 0
 	if(block == NULL)	{
 		return(capmalloc(size));
 	}
@@ -94,6 +100,5 @@ void *caprealloc(void *block, size_t size)	{
 	//	Release the old block, return the new.
 	capfree(block);
 	return(newblock);
+#endif
 }
-
-}; // extern "C"
