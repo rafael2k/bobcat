@@ -47,14 +47,14 @@
 #include "HTVMSUtils.h"
 #endif
 
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 
 #include "LYSignal.h"
 #include "LYUtils.h"
 
 #include "LYexit.h"
 
-#include "LYCharSe.c"
+#include "LYCharSets.c"
 
 #include "LYLeaks.h"
 

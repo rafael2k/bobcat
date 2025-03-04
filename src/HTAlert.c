@@ -17,7 +17,7 @@
 #include "LYUtils.h"
 #include "LYSignal.h"
 #include "GridText.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 
 #include "LYLeaks.h"
 

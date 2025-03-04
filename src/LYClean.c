@@ -3,7 +3,7 @@
 #include "LYUtils.h"
 #include "LYSignal.h"
 #include "LYClean.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYString.h"
 
 #include "LYexit.h"

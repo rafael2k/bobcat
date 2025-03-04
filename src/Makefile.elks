@@ -40,8 +40,9 @@ BINDIR = ../elks-bin
 LOCALFLAGS = -DNDEBUG
 PROG = bobcat
 
-SRCS = Defaults.c GridText.c LYMain.c LYMainLoop.c HTAlert.c HTML.c LYBookma.c \
-     LYCharSe.c LYClean.c LYCurses.c
+# dont include  "LYCharSets.c"
+SRCS = DefaultStyle.c GridText.c LYMain.c LYMainLoop.c HTAlert.c HTML.c LYBookmark.c \
+     LYCharSets.c LYClean.c LYCurses.c
 
 all: $(PROG)
 

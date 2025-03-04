@@ -23,7 +23,7 @@
 #include "LYMail.h"
 #include "LYString.h"
 #include "LYStruct.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYGetFil.h"
 #include "LYSignal.h"
 #include "LYexit.h"

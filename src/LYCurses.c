@@ -1,7 +1,7 @@
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "LYUtils.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYSignal.h"
 #include "LYClean.h"
 #include "tcp.h"

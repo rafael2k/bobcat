@@ -1,7 +1,7 @@
 #include "HTUtils.h"
 #include "tcp.h"
 
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 
 #include "LYexit.h"
 #include "LYLeaks.h"
