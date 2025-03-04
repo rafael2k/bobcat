@@ -1,4 +1,6 @@
-#include "spawno.h"
+#include <unistd.h>
+
+/*  #include "spawno.h" */
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "HTAccess.h"

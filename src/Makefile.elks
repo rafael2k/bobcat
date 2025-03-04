@@ -40,7 +40,7 @@ BINDIR = ../elks-bin
 LOCALFLAGS = -DNDEBUG
 PROG = bobcat
 
-SRCS = Defaults.c GridText.c LYMain.c
+SRCS = Defaults.c GridText.c LYMain.c LYMainLoop.c
 
 all: $(PROG)
 

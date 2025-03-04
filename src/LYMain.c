@@ -1,6 +1,7 @@
 /*#include "spawno.h"
 #include <dos.h>
 #include <dir.h>*/
+#include <unistd.h>
 
 #include "HTUtils.h"
 #include "HTInit.h"
@@ -191,6 +192,12 @@ PRIVATE BOOLEAN stack_dump=FALSE;
 PRIVATE char *terminal=NULL;
 PRIVATE char *pgm;
 
+/* just to fill the gap for ELKS */
+void clrscr()
+{
+    printf("\033[H\033[J");
+}
+
 PUBLIC int main ARGS2(int,argc, char **,argv)
 {
     int  i;  /* indexing variable */
@@ -229,18 +236,6 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
 
     }
 
-    init_SPAWNO(chomedir,SWAP_ANY) ;
-
-    if (_OvrInitEms(0L , 0L, 0L)) _OvrInitExt (0, 0);
-
-/*
-    {
-	printf("No expanded memory found\n");
-	if (_OvrInitExt (0, 0)) {
-	    printf("No extended memory found\n");
-	}
-    }
-*/
     {
 	char *ccp;
 
@@ -467,11 +462,11 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
 	(void) signal (SIGINT, cleanup_sig);
 #ifndef __linux__
 #ifndef MSDOS
-	(void) signal (SIGBUS, FatalProblem);
+/*	(void) signal (SIGBUS, FatalProblem); */
 #endif
 #endif /* !__linux__ */
         (void) signal (SIGSEGV, FatalProblem);
-        (void) signal (SIGILL, FatalProblem);
+/*        (void) signal (SIGILL, FatalProblem);*/
         /*
 	 * Since we're doing lots of TCP, just ignore SIGPIPE altogether.
 	 *
@@ -1229,10 +1224,10 @@ fprintf(stderr, "\r\nLynx now exiting with signal:  %d\r\n\n", sig);
     (void) signal (SIGINT, SIG_IGN);
 #endif /* !VMS */
     (void) signal (SIGSEGV, SIG_IGN);
-    (void) signal (SIGILL, SIG_IGN);
+    /*(void) signal (SIGILL, SIG_IGN);*/
     cleanup_sig(0);
     signal (SIGSEGV, 0);
-    signal (SIGILL, 0);
+    /*signal (SIGILL, 0); */
     abort();  /* exit and dump core */
 }
 
