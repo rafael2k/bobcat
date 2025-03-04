@@ -16,7 +16,6 @@
 #include "LYLeaks.h"
 
 #define FREE(x) if (x) {free(x); x = NULL;}
-#define DOSPATH
 
 extern BOOL HTPassHighCtrlRaw;
 
