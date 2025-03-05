@@ -27,6 +27,8 @@
 #include "LYexit.h"
 #include "LYLeaks.h"
 
+#include <unistd.h>
+
 PUBLIC char * WWW_Download_File=0; /* contains the name of the temp file
 				    * which is being downloaded into
 				    */

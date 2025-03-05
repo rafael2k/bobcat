@@ -2,7 +2,6 @@
 **		===============================
 */
 
-#include "heap.h"
 #include "HTUtils.h"
 #include "tcp.h"
 
