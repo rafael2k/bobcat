@@ -3,7 +3,7 @@
 #include "LYHistor.h"
 #include "LYPrint.h"
 #include "LYDownlo.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 
 #ifdef DIRED_SUPPORT
 #include "LYUpload.h"

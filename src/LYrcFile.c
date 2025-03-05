@@ -3,8 +3,8 @@
 #include "LYUtils.h"
 #include "LYrcFile.h"
 #include "LYString.h"
-#include "LYGlobal.h"
-#include "LYCharSe.h"
+#include "LYGlobalDefs.h"
+#include "LYCharSets.h"
 
 #include "LYLeaks.h"
 

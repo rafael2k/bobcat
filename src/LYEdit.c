@@ -4,7 +4,7 @@
 #include "LYSignal.h"
 #include "LYUtils.h"
 #include "LYClean.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYEdit.h"
 #include "LYString.h"
 #include "LYSystem.h"
@@ -12,6 +12,8 @@
 #include <unixio.h>
 #include "HTVMSUtils.h"
 #endif /* VMS */
+
+#include <unistd.h>
 
 #include "LYLeaks.h"
 

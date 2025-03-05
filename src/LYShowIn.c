@@ -1,9 +1,11 @@
+#include <unistd.h>
+
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "LYString.h"
 #include "LYUtils.h"
 #include "LYStruct.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYShowIn.h"
 #include "LYSignal.h"
 

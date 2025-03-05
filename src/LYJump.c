@@ -2,7 +2,7 @@
 #include "tcp.h"
 #include "LYUtils.h"
 #include "LYString.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYJump.h"
 #include "LYKeymap.h"
 #include "LYSignal.h"
@@ -10,8 +10,35 @@
 // #include <io.h>
 // #include <dos.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "LYLeaks.h"
+
+void *bsearch(const void *key, const void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *)) {
+    size_t low = 0;
+    size_t high = nmemb - 1;
+
+    while (low <= high) {
+        size_t mid = low + (high - low) / 2;
+        const void *mid_element = (const char *)base + mid * size;
+
+        int cmp_result = compar(key, mid_element);
+
+        if (cmp_result == 0) {
+            // Elemento encontrado
+            return (void *)mid_element;
+        } else if (cmp_result < 0) {
+            // O elemento está na metade esquerda
+            high = mid - 1;
+        } else {
+            // O elemento está na metade direita
+            low = mid + 1;
+        }
+    }
+
+    // Elemento não encontrado
+    return NULL;
+}
 
 #ifdef VMS
 #include <fab.h>
@@ -96,7 +123,7 @@ PRIVATE unsigned LYRead_Jumpfile ARGS1(JumpDatum **,tpp)
 	return 0;
     }
 
-    if ((fd=open(jumpfile, O_RDONLY | O_BINARY)) < 0) {
+    if ((fd=open(jumpfile, O_RDONLY)) < 0) {
 	statusline("Cannot open jump file");
 	sleep(sleep_two);
 	free(mp);

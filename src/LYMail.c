@@ -1,4 +1,4 @@
-#include "spawno.h"
+// #include "spawno.h"
 #include "HTUtils.h"
 #include "HTParse.h"
 #include "LYCurses.h"
@@ -8,10 +8,11 @@
 #include "LYString.h"
 #include "GridText.h"
 #include "LYSystem.h"
-#include "LYGlobal.h"
-#include "mail.h"
+#include "LYGlobalDefs.h"
+#include "LYMail.h"
 #include "LYLeaks.h"
 
+#include <unistd.h>
 
 /*
 **  mailform() sends form content to the mailto address(es). - FM
