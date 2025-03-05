@@ -19,7 +19,7 @@
 #include "HTFile.h"
 #include "HTFormat.h"
 #include "HTMIME.h"
-#include "HTWSRC.h"
+// #include "HTWSRC.h"
 
 #include "HTSaveTo.h"  /* LJM */
 #include "userdefs.h"
@@ -93,14 +93,14 @@ PUBLIC void HTFormatInit NOARGS
  HTSetConversion("application/html", "www/present", HTMLPresent, 1.0, 0.0, 0.0);
  HTSetConversion("application/html", "www/source", HTPlainPresent, 1.0, 0.0, 0.0);
 
- HTSetConversion("application/x-wais-source", "www/source",  	     
+ HTSetConversion("application/x-wais-source", "www/source",
 					HTPlainPresent, 	1.0, 0.0, 0.0);
- HTSetConversion("application/x-wais-source", "www/present",  	     
-				        HTWSRCConvert,		1.0, 0.0, 0.0);
- HTSetConversion("application/x-wais-source", "www/download",  	     
-					HTWSRCConvert, 		1.0, 0.0, 0.0);
- HTSetConversion("application/x-wais-source", "www/dump",  	     
-					HTWSRCConvert, 		1.0, 0.0, 0.0);
+// HTSetConversion("application/x-wais-source", "www/present",
+//			        HTWSRCConvert,		1.0, 0.0, 0.0);
+// HTSetConversion("application/x-wais-source", "www/download",
+//					HTWSRCConvert, 		1.0, 0.0, 0.0);
+// HTSetConversion("application/x-wais-source", "www/dump",
+//					HTWSRCConvert, 		1.0, 0.0, 0.0);
 
   /* save all unknown mime types to disk */
  HTSetConversion("www/source",  "www/present",  HTSaveToFile ,  1.0, 3.0, 0.0);

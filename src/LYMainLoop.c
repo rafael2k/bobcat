@@ -18,7 +18,7 @@
 #include "LYClean.h"
 #include "LYHistor.h"
 #include "LYPrint.h"
-#include "LYMail.h"
+// #include "LYMail.h"
 #include "LYEdit.h"
 #include "LYShowIn.h"
 #include "LYBookmark.h"

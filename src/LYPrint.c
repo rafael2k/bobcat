@@ -1,5 +1,5 @@
 //#include "spawno.h"
-#include "LYMail.h"
+// #include "LYMail.h"
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "HTAccess.h"
@@ -15,6 +15,8 @@
 #include "LYSystem.h"
 
 #include "LYLeaks.h"
+
+#include <unistd.h>
 
 /*
  *  printfile prints out the current file minus the links and targets 

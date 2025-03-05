@@ -14,7 +14,7 @@
 #include "LYClean.h"
 #include "LYDownlo.h"
 //#include "LYNews.h"
-#include "LYMail.h"
+//#include "LYMail.h"
 #include "LYSystem.h"
 #include "LYKeymap.h"
 #include "LYBookmark.h"

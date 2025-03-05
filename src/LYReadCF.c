@@ -7,7 +7,7 @@
 #include "LYCharSets.h"
 #include "LYKeymap.h"
 #include "LYGetFil.h"
-#include "LYCgi.h"
+// #include "LYCgi.h"
 #include "curses.h"
 
 #include "LYLeaks.h"

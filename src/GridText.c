@@ -20,7 +20,7 @@
 
 /* lynx specific defines */
 #include "LYUtils.h"
-#include "LYMail.h"
+// #include "LYMail.h"
 #include "LYString.h"
 #include "LYStruct.h"
 #include "LYGlobalDefs.h"

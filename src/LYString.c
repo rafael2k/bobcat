@@ -8,7 +8,7 @@
 #include "LYKeymap.h"
 #include "LYSignal.h"
 #include "LYClean.h"
-#include "LYMail.h"
+// #include "LYMail.h"
 #include "LYOption.h"
 
 #include <ctype.h>

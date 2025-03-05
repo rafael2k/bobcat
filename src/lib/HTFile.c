@@ -35,8 +35,8 @@
 #include "HTParse.h"
 #include "tcp.h"
 #include "HTTCP.h"
-#include "HTFTP.h"
-#include "HTGOPHER.h"
+// #include "HTFTP.h"
+//#include "HTGOPHER.h"
 #include "HTAnchor.h"
 #include "HTAtom.h"
 #include "HTWriter.h"
@@ -63,7 +63,7 @@ typedef struct _HTSuffix {
 
 #define STRUCT_DIRENT struct direct
 
-#define GOT_READ_DIR 1
+#define GOT_READ_DIR 0
 #define STRUCT_DIRENT struct dirent
 
 #include "HTML.h"		/* For directory object building */

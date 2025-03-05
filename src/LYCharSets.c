@@ -135,6 +135,7 @@ PRIVATE char * ISO_Latin1[] = {
   	"\377",	/* small y, dieresis or umlaut mark - yuml */ 
 };
 
+#if 0
 /* 	Entity values -- for ISO Latin 2 local representation
 **
 **	This MUST match exactly the table referred to in the DTD!
@@ -360,7 +361,7 @@ PRIVATE char * DEC_Multinational[] = {
 	"\245",	/* yen sign (&#165;) - yen */
   	"\375",	/* small y, dieresis or umlaut mark - yuml */ 
 };
-
+#endif
 /*
 **      Entity values -- regular PC charset
 **	(codepage 437 - hardware default on most US market PCs)
@@ -479,6 +480,7 @@ PRIVATE char * PC_charset[] = {
         "\230",	/* small y, dieresis or umlaut mark - yuml */
 };
 
+#if 0
 /*
 **      Entity values - ISO-Latin PC charset
 **	(MS-DOS codepage 850)
@@ -1103,7 +1105,7 @@ PRIVATE char * SevenBitApproximations[] = {
 	"&yen;",/* yen sign (&#165;) - yen */
         "y",	/* small y, dieresis or umlaut mark - yuml */
 };
-
+#endif
 
 /*
  * Add your new character sets HERE
@@ -1115,14 +1117,14 @@ PRIVATE char * SevenBitApproximations[] = {
  */
 PUBLIC char ** LYCharSets[]={
 	ISO_Latin1,
-	ISO_Latin2,
-	DEC_Multinational,
+//	ISO_Latin2,
+//	DEC_Multinational,
 	PC_charset,
-	PC_850_charset,
-	Macintosh,
-	NeXT_Step,
-	KOI8_R,
-	SevenBitApproximations
+//	PC_850_charset,
+//	Macintosh,
+//	NeXT_Step,
+//	KOI8_R,
+//	SevenBitApproximations
 };
 
 /*
@@ -1131,14 +1133,14 @@ PUBLIC char ** LYCharSets[]={
  */
 PUBLIC char * LYchar_set_names[]={
 	"ISO Latin 1         ",
-	"ISO Latin 2         ",
-	"DEC Multinational   ",
+//	"ISO Latin 2         ",
+//	"DEC Multinational   ",
 	"IBM PC character set",
-	"IBM PC codepage 850 ",
-	"Macintosh (8 bit)   ",
-	"NeXT character set  ",
-	"KOI8-R character set",
-	"7 bit approximations",
+//	"IBM PC codepage 850 ",
+//	"Macintosh (8 bit)   ",
+//	"NeXT character set  ",
+//	"KOI8-R character set",
+//	"7 bit approximations",
 	(char *) 0
 };
 

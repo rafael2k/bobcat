@@ -1,7 +1,7 @@
 // #include <alloc.h>
 #include "HTUtils.h"
 #include "LYCurses.h"
-#include "HTFTP.h"
+// #include "HTFTP.h"
 #include "HTML.h"
 #include "LYUtils.h"
 #include "LYString.h"
