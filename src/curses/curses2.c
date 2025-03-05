@@ -14,26 +14,6 @@
 #include <signal.h>
 #include <termios.h>
 
-static int mouse_button;
-
-void waitformouse(void)
-{
-    int n, e;
-    int mx, my, modkeys;
-    char buf[32];
-
-    if (mouse_button != kMouseLeftDown && mouse_button != kMouseLeftDoubleClick)
-        return;
-    for (;;) {
-        if ((n = readansi(0, buf, sizeof(buf))) < 0)
-            break;
-        if ((n = ansi_to_unimouse(buf, n, &mx, &my, &modkeys, &e)) != -1) {
-            if (n == kMouseLeftUp)
-                return;
-        }
-        /* ignore keystrokes */
-    }
-}
 
 int getch()
 {
@@ -47,17 +27,6 @@ int getch()
     if ((e = ansi_to_unikey(buf, n)) != -1) {   // FIXME UTF-8 unicode != -1
         //printf("KBD %x (%d)\n", e, n);
         return e;
-    }
-    if ((n = ansi_to_unimouse(buf, n, &mx, &my, &modkeys, &status)) != -1) {
-        mouse_button = n;
-        switch (n) {
-        case kMouseLeftDoubleClick:
-            waitformouse();
-            return n;
-        case kMouseWheelDown:
-        case kMouseWheelUp:
-            return n;
-        }
     }
     return -1;
 }

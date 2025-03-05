@@ -1,4 +1,5 @@
 /* curses.h workaround - Greg Haerr*/
+#include "unikey.h"
 
 #define KEY_BACKSPACE   kBackSpace
 #define KEY_LEFT        kLeftArrow
@@ -131,10 +132,7 @@ void wbkgdset(WINDOW *w, int a);
 /* partially implemented functions for invaders */
 void mvprintw(int y, int x, const char *fmt, ...);
 
-void read_ansi_cursor_position(int *y, int *x);
 
 #define getyx(win, y, x) { \
-    printf("\033[6n");        \
-    fflush(stdout);           \
-    read_ansi_cursor_position(&(y), &(x)); \
+	tty_getsize(&x, &y); \
 }

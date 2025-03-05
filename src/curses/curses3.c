@@ -128,22 +128,3 @@ void wrefresh(WINDOW *w)
 {
     printf("\033[m");
 }
-
-void read_ansi_cursor_position(int *y, int *x) {
-    char buf[32];
-    int i = 0;
-    char c;
-
-    while (read(STDIN_FILENO, &c, 1) == 1) {
-        if (c == 'R') {
-            break; // Fim da resposta
-        }
-        buf[i++] = c;
-    }
-    buf[i] = '\0';
-
-    if (sscanf(buf, "\033[%d;%d", y, x) != 2) {
-        *y = *x = -1; // Erro ao ler as coordenadas
-    }
-}
-
