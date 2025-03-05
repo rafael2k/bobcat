@@ -104,6 +104,8 @@ void clrtoeol(void)
     printf("\033[0K");
 }
 
+
+
 void printw(char *fmt, ...)
 {
     va_list ptr;

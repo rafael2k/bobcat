@@ -519,8 +519,9 @@ PRIVATE int popup_options ARGS6(int,cur_selection, OptionType *,list,
      */
     form_window = newwin(bottom - top, width+4, top, lx - 1);
     scrollok(form_window, TRUE);
+#ifdef GOODCURSES
     wbkgd(form_window, getbkgd(stdscr));
-    
+#endif
     /*
      * Set up the window_offset for options.
      *   cur_selection ranges from 0...n
@@ -543,9 +544,13 @@ redraw:
     /* display the boxed options */
     for(i = 0; i <= num_options; i++, opt_ptr = opt_ptr->next) {
         if(i >= window_offset && i - window_offset < length) {
-	    wmove(form_window,(i+1)-window_offset,2);
+#ifdef GOODCURSES
+		wmove(form_window,(i+1)-window_offset,2);
 	    wclrtoeol(form_window);
-            waddstr(form_window,opt_ptr->name);
+#else
+		clrtoeol();
+#endif
+		waddstr(form_window,opt_ptr->name);
 	}
     }
     box(form_window, BOXVERT, BOXHORI);
@@ -557,8 +562,10 @@ redraw:
 
         /* unreverse cur selection */
 	if(opt_ptr!=NULL) {
+#ifdef GOODCURSES
 	    wmove(form_window,(i+1)-window_offset,2);
-            waddstr(form_window,opt_ptr->name);
+#endif
+		waddstr(form_window,opt_ptr->name);
 	}
 
         opt_ptr=list;
@@ -567,9 +574,13 @@ redraw:
 	    ; /* null body */
 
         wstart_reverse(form_window);
-	wmove(form_window,(i+1)-window_offset,2);
+#ifdef GOODCURSES
+		wmove(form_window,(i+1)-window_offset,2);
+#endif
         waddstr(form_window,opt_ptr->name);
-             wmove(form_window,(i+1)-window_offset,2);
+#ifdef GOODCURSES
+		wmove(form_window,(i+1)-window_offset,2);
+#endif
         wstop_reverse(form_window);
         wrefresh(form_window);
 
@@ -587,9 +598,11 @@ new_cmd:  /* jump here to skip user */
 
 		/* scroll the window up if neccessary */
 		if(cur_selection-window_offset < 0) {
+#ifdef GOODCURSES
 		    wmove(form_window,1,2);
 		    winsertln(form_window);
-    		    box(form_window, BOXVERT, BOXHORI);
+#endif
+			box(form_window, BOXVERT, BOXHORI);
 		    window_offset--;
 		}
                 break;
@@ -601,10 +614,14 @@ new_cmd:  /* jump here to skip user */
 		/* scroll the window down if neccessary */
 		if(cur_selection-window_offset >= length) {
 		    /* remove the bottom border befor scrolling */
+#ifdef GOODCURSES
 		    wmove(form_window,length+1,1);
 		    wclrtoeol(form_window);
 		    scroll(form_window);
-    		    box(form_window, BOXVERT, BOXHORI);
+#else
+		    clrtoeol();
+#endif
+			box(form_window, BOXVERT, BOXHORI);
 		    window_offset++;
 		}
                 break;
@@ -695,7 +712,9 @@ new_cmd:  /* jump here to skip user */
         }
 
     }
+#ifdef GOODCURSES
     delwin(form_window);
+#endif
     refresh();
 
     return(cur_selection);

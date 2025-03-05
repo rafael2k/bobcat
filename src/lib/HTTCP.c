@@ -23,6 +23,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#define NeXT
+
 #if 0
 uint32_t aton( char *text )
 {

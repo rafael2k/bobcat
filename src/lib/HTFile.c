@@ -311,10 +311,6 @@ PUBLIC char * HTLocalName ARGS1(CONST char *,name)
 #ifdef DT
 	    if (TRACE) fprintf(stderr, "Node `%s' means path `%s'\n", name, path);
 #endif
-            {
-                 extern void urltodos(char *);
-                 urltodos(path);
-            }
 	    return(path);
 	} else {
 	    char * result = (char *)malloc(
