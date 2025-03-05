@@ -5,6 +5,8 @@
 **                   servers.
 */
 
+#include <unistd.h>
+
 #include "HTUtils.h"
 #include "tcp.h"
 
@@ -27,7 +29,7 @@
 #include "HTInit.h"
 #include "HTAABrow.h"
 
-#include "gridtext.h"
+#include "GridText.h"
 
 #ifdef MSDOS
 #include "LYUtils.h"
@@ -393,6 +395,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
 
           /* Do nothing. */
         }
+#if 0
       else if 
 	((SOCKET_ERRNO == ENOTCONN || SOCKET_ERRNO == ECONNRESET
 	 || SOCKET_ERRNO == EPIPE
@@ -413,6 +416,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
             already_retrying = 1;
             goto try_again;
           }
+#endif
       else
         {
 #ifdef DT
@@ -483,6 +487,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
                 status = HT_INTERRUPTED;
                 goto clean_up;
               }
+#if 0
             else if 
               (status < 0 &&
 	       (SOCKET_ERRNO == ENOTCONN || SOCKET_ERRNO == ECONNRESET
@@ -506,6 +511,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
                 _HTProgress ("Retrying as HTTP0 request.");
                 goto try_again;
               }
+#endif
             else
               {
 #ifdef DT

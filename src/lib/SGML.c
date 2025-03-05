@@ -390,7 +390,8 @@ PRIVATE void end_element ARGS2(
 	context->element_stack = N->next;		/* Remove from stack */
 	FREE(N);
 	(*context->actions->end_element)(context->target,
-		 t - context->dtd->tags, (char **)&context->include);
+		 t - context->dtd->tags);
+//		t - context->dtd->tags, (char **)&context->include);
 #ifdef WIND_DOWN_STACK
 	if (old_tag == t)
 	    return;  /* Correct sequence */
@@ -427,8 +428,8 @@ vpp_msdosmem = (void **)(context->value);
     	context->target,
 	new_tag - context->dtd->tags,
 	context->present,
-	(CONST char**) context->value,  /* coerce type for think c */
-	(char **)&context->include);
+	(CONST char**) context->value  /* coerce type for think c */
+	);
     if (new_tag->contents != SGML_EMPTY) {		/* i.e. tag not empty */
 	HTElement * N = (HTElement *)malloc(sizeof(HTElement));
         if (N == NULL)
@@ -502,7 +503,7 @@ PUBLIC void SGML_free  ARGS1(
 	context->element_stack = cur->next;	/* Remove from stack */
 	FREE(cur);
 	(*context->actions->end_element)(context->target,
-		 t - context->dtd->tags, (char **)&context->include);
+		 t - context->dtd->tags);
 	FREE(context->include);
     }
 

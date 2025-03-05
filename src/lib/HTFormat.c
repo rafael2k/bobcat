@@ -11,6 +11,7 @@
 **
 */
 
+#include <unistd.h>
 
 #include "HTUtils.h"
 #include "tcp.h"
@@ -534,7 +535,7 @@ PUBLIC int HTCopy ARGS2(
 
         if (HTCheckForInterrupt())
           {
-            _HTProgress ("Data transfer interrupted.");
+			  // _HTProgress ("Data transfer interrupted.");
             (*targetClass._abort)(sink, NULL);
 	    if(bytes)
                 rv = HT_INTERRUPTED;
@@ -550,7 +551,7 @@ PUBLIC int HTCopy ARGS2(
         if (status < 0) {
             if (status == HT_INTERRUPTED)
               {
-                _HTProgress ("Data transfer interrupted.");
+                // _HTProgress ("Data transfer interrupted.");
                 (*targetClass._abort)(sink, NULL);
 		if(bytes)
                     rv = HT_INTERRUPTED;
@@ -559,12 +560,14 @@ PUBLIC int HTCopy ARGS2(
 		goto finished;
               }
 //            else if (SOCKET_ERRNO == ENOTCONN || SOCKET_ERRNO == ECONNRESET || SOCKET_ERRNO == EPIPE)
+#if 0
             else if (SOCKET_ERRNO == EBADF)
               {
                 /* Arrrrgh, HTTP 0/1 compability problem, maybe. */
 		rv = -2;
 	        goto finished;
               }
+#endif
 	    break;
 	}
 
@@ -585,7 +588,7 @@ PUBLIC int HTCopy ARGS2(
 
     } /* next bufferload */
 
-    _HTProgress("Data transfer complete");
+    // _HTProgress("Data transfer complete");
     NETCLOSE(file_number);
     rv = HT_LOADED;
 

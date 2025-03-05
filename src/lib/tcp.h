@@ -574,7 +574,7 @@ typedef unsigned int fd_set;
  */
 #ifndef CACHE_FILE_PREFIX
 #ifdef unix
-#define CACHE_FILE_PREFIX  "/usr/wsrc/"
+#define CACHE_FILE_PREFIX  "/usr/src/"
 #endif
 #endif
 
