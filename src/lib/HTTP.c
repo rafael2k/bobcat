@@ -395,9 +395,8 @@ PUBLIC int HTLoadHTTP ARGS4 (
 
           /* Do nothing. */
         }
-#if 0
-      else if 
-	((SOCKET_ERRNO == ENOTCONN || SOCKET_ERRNO == ECONNRESET
+      else if
+	((SOCKET_ERRNO == -1
 	 || SOCKET_ERRNO == EPIPE
 	) && !already_retrying &&
          /* Don't retry if we're posting. */ !do_post)
@@ -416,7 +415,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
             already_retrying = 1;
             goto try_again;
           }
-#endif
       else
         {
 #ifdef DT
@@ -487,10 +485,10 @@ PUBLIC int HTLoadHTTP ARGS4 (
                 status = HT_INTERRUPTED;
                 goto clean_up;
               }
-#if 0
+#if 1
             else if 
               (status < 0 &&
-	       (SOCKET_ERRNO == ENOTCONN || SOCKET_ERRNO == ECONNRESET
+	       (SOCKET_ERRNO == -1
 		|| SOCKET_ERRNO == EPIPE
 		     ) && !already_retrying && !do_post)
               {

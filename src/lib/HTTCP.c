@@ -19,6 +19,51 @@
 #include "HTParse.h"
 #include "LYLeaks.h"
 
+#include <stdint.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#if 0
+uint32_t aton( char *text )
+{
+    char *p;
+    int i, cur;
+    uint32_t ip;
+
+    ip = 0;
+
+    if ( *text == '[' )
+	++text;
+    for ( i = 24; i >= 0; i -= 8 ) {
+	cur = atoi( text );
+	ip |= (uint32_t)(cur & 0xff) << i;
+	if (!i) return( ip );
+
+	if (!(text = strchr( text, '.')))
+	    return( 0 );	/* return 0 on error */
+	++text;
+	}
+}
+#endif
+
+uint16_t isaddr( char *text )
+{
+    char ch;
+    while ( ch = *text++ ) {
+	if ( isdigit(ch) ) continue;
+	if ( ch == '.' || ch == ' ' || ch == '[' || ch == ']' )
+	    continue;
+	return( 0 );
+    }
+    return( 1 );
+}
+
+uint32_t inet_addr( char *s )
+{
+    return( isaddr( s ) ? in_aton( s ) : 0 );
+}
+
+
 #ifdef SHORT_NAMES
 #define HTInetStatus		HTInStat
 #define HTInetString 		HTInStri
@@ -274,7 +319,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 	if(TRACE)fprintf(stderr, "HTTCP: Calling gethostbyname(%s)\n", host);
 #endif /* DT */
 #endif
-	phost=gethostbyname(host);	/* See netdb.h */
+	phost = in_gethostbyname(host);	/* See netdb.h */
 #ifdef MVS
 #ifndef DT
 	if(TRACE)fprintf(stderr, "HTTCP: gethostbyname() returned %d\n", phost);
@@ -288,7 +333,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
         
 	    return -1;  /* Fail? */
 	}
-	memcpy(&sin->sin_addr, phost->h_addr, phost->h_length);
+	memcpy(&sin->sin_addr, in_gethostbyname(host), 4);
     }
 
 #ifndef DT
@@ -409,7 +454,7 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
   }
 
   /* Now, let's get a socket set up from the server for the data: */
-  *s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  *s = socket(AF_INET, SOCK_STREAM, AF_INET);
 
   /*
    * Issue the connect.  Since the server can't do an instantaneous accept

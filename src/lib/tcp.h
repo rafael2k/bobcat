@@ -48,9 +48,13 @@ Default values
 
  */
 /* Default values of those: */
+/* Default values of those: */
 #define NETCLOSE close      /* Routine to close a TCP-IP socket         */
 #define NETREAD  read       /* Routine to read from a TCP-IP socket     */
 #define NETWRITE write      /* Routine to write to a TCP-IP socket      */
+#define SOCKET_READ read    /* normal socket read routine */
+#define IOCTL ioctl	    /* normal ioctl routine for sockets */
+#define SOCKET_ERRNO errno	    /* normal socket errno */
 
 /* Unless stated otherwise, */
 #define SELECT                  /* Can handle >1 channel.               */
