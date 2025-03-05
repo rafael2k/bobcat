@@ -12,12 +12,12 @@
 //#include"capalloc.h"
 //#include"capstdio.h"
 
-#include "HTalert.h"
+#include "HTAlert.h"
 #include "HTUtils.h"
 #include "tcp.h"		/* Defines SHORT_NAMES if necessary */
 #include "LYUtils.h"
-#include "htparse.h"
-#include "LYleaks.h"
+#include "HTParse.h"
+#include "LYLeaks.h"
 
 #ifdef SHORT_NAMES
 #define HTInetStatus		HTInStat
