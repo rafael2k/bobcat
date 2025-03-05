@@ -55,4 +55,4 @@ bobcat: $(OBJS)
 
 
 clean:
-	rm -f $(PROG) *.obj tmp.h
+	rm -f $(PROG) *.obj lib/*.obj tmp.h

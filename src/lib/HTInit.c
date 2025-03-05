@@ -726,7 +726,7 @@ PUBLIC void HTFileInit NOARGS
 
 #define MAX_STRING_LEN 256
 
-PRIVATE int getline ARGS3(char *,s, int,n, FILE *,f) 
+PRIVATE int getline2 ARGS3(char *,s, int,n, FILE *,f)
 {
   register int i=0;
   
@@ -795,7 +795,7 @@ PRIVATE int HTLoadExtensionsConfigFile ARGS1(char *,fn)
     }
 
 
-  while(!(getline(l,MAX_STRING_LEN,f))) 
+  while(!(getline2(l,MAX_STRING_LEN,f)))
     {
       getword(w,l);
       if(l[0] == '\0' || w[0] == '#')
