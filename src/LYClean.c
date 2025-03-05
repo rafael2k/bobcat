@@ -14,6 +14,8 @@
 
 #include "LYLeaks.h"
 
+#include <unistd.h>
+
 #ifdef VMS
 BOOLEAN HadVMSInterrupt = FALSE;
 #endif /* VMS */

@@ -415,13 +415,6 @@ PRIVATE void start_element ARGS1(
 {
     HTTag * new_tag = context->current_tag;
 
-{
-extern void *vp_msdosmem;
-extern void **vpp_msdosmem;
-vp_msdosmem = (void *)(context->present);
-vpp_msdosmem = (void **)(context->value);
-}
-
 //    if (TRACE)
 //        fprintf(stderr, "SGML: Start <%s>\n", new_tag->name);
     (*context->actions->start_element)(

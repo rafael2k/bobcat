@@ -360,13 +360,6 @@ PUBLIC void HTStartAnchor ARGS3(HTStructured *, obj,
         value[HTML_A_HREF] = (CONST char *)href;
     }
 
-{
-        extern void *vp_msdosmem;
-        extern void **vpp_msdosmem;
-        vp_msdosmem = (void *)(present);
-        vpp_msdosmem = (void **)(value);
-}
-        
     (*obj->isa->start_element)(obj, HTML_A , present, value);
 
 }

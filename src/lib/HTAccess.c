@@ -117,7 +117,7 @@ PRIVATE void HTAccessInit NOARGS			/* Call me once */
 
 GLOBALREF HTProtocol HTTP, HTTPS, HTFile, HTFTP;
 // GLOBALREF  HTProtocol HTGopher, HTTelnet, HTTn3270, HTRlogin;;
-GLOBALREF  HTProtocol LYLynxCGI;
+// GLOBALREF  HTProtocol LYLynxCGI;
 
 //    HTRegisterProtocol(&HTNews);
 
@@ -139,7 +139,7 @@ GLOBALREF  HTProtocol LYLynxCGI;
  */
 //PUBLIC void LYRegisterLynxProtocols NOARGS
 //{
-    HTRegisterProtocol(&LYLynxCGI);
+//    HTRegisterProtocol(&LYLynxCGI);
 //}
 
 //    LYRegisterLynxProtocols();	/* In case lynx wishes to register something */

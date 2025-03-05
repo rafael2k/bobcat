@@ -49,7 +49,7 @@ SRCS =  DefaultStyle.c  HTAlert.c  LYDownlo.c    LYHistor.c  LYLeaks.c   LYMainL
      lib/HTAAProt.c  lib/HTAnchor.c  lib/HTChunk.c   lib/HTMIME.c   lib/HTPlain.c   lib/HTTP.c \
      lib/HTAAServ.c  lib/HTAssoc.c   lib/HTFile.c    lib/HTGroup.c   lib/HTMLDTD.c  lib/HTRules.c   lib/HTUU.c \
      lib/HTAAUtil.c  lib/HTAtom.c    lib/HTFormat.c  lib/HTInit.c    lib/HTMLGen.c  lib/HTString.c  lib/HTWriter.c \
-     curses/curses2.c curses/curses3.c curses/curses.c curses/unikey.c mem.c
+     curses/curses2.c curses/curses3.c curses/curses.c curses/unikey.c curses/tty.c mem.c
 
 
 all: $(PROG)

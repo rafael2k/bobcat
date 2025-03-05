@@ -132,7 +132,7 @@ typedef struct _connection {
 
 #define PUTC(c) (*targetClass.put_character)(target, c)
 #define PUTS(s) (*targetClass.put_string)(target, s)
-#define START(e) (vp_msdosmem = NULL, vpp_msdosmem = NULL, (*targetClass.start_element)(target, e, 0, 0))
+#define START(e) (*targetClass.start_element)(target, e, 0, 0)
 #define END(e) (*targetClass.end_element)(target, e)
 #define FREE_TARGET (*targetClass._free)(target)
 #define ABORT_TARGET (*targetClass._free)(target)

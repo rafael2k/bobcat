@@ -692,15 +692,12 @@ PUBLIC void HTDirTitles ARGS2(HTStructured *, target,
 
       StrAllocCopy(printable, (current + 1));
 
-{extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 
       START(HTML_HTML);
-{extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
       START(HTML_HEAD);
       PUTS("\n");
       HTUnEscape(printable);
 
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
       START(HTML_TITLE);
       PUTS(*printable ? printable : "Welcome ");
       PUTS(" directory");
@@ -709,7 +706,6 @@ PUBLIC void HTDirTitles ARGS2(HTStructured *, target,
       END(HTML_HEAD);
       PUTS("\n");
 
-{extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
       START(HTML_H1);
       PUTS(*printable ? printable : "Welcome");
       END(HTML_H1);
@@ -1154,20 +1150,16 @@ forget_multi:
 					END(HTML_DIR);
 				    state = *(char *)
 					(HTBTree_object(next_element))=='D'?'D':'F';
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 				    START(HTML_H2);
 				    PUTS(state == 'D'?"Subdirectories:":"Files");
 				    END(HTML_H2);
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 				    START(HTML_DIR);
 				}
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 				START(HTML_LI);
 			    }
 			    entry = (char*)HTBTree_object(next_element)+1;
 			    file_extra = NULL;
 #ifdef LONG_LIST
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 			    START(HTML_PRE);
 //			    if(lstat(tmpfilename, &st) != -1) {
 			    if(stat(tmpfilename, &st) != -1) {
@@ -1256,7 +1248,6 @@ forget_multi:
 			}
 			if (state == 'I')
 			{
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
 			    START(HTML_P);
 			    PUTS("Empty Directory");
 			}
