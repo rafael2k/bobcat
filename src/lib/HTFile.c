@@ -567,6 +567,9 @@ PUBLIC long HTFileValue ARGS1 (CONST char *,filename)
 #define NO_GROUPS
 #endif /* MSDOS */
 
+#define NO_GROUPS
+
+
 PUBLIC BOOL HTEditable ARGS1 (CONST char *,filename)
 {
 #ifdef NO_GROUPS

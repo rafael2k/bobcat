@@ -375,11 +375,13 @@ PRIVATE void get_host_details()
     int namelength = sizeof(name);
     
     if (hostname) return;		/* Already done */
+#if 0
     gethostname(name, namelength);	/* Without domain */
 #ifndef DT
     CTRACE(tfp, "TCP: Local host name is %s\n", name);
 #endif /* DT */
     StrAllocCopy(hostname, name);
+#endif
 
 #ifndef DECNET  /* Decnet ain't got no damn name server 8#OO */
 #ifdef NEED_HOST_ADDRESS		/* no -- needs name server! */
