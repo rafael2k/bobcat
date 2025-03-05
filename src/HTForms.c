@@ -4,11 +4,13 @@
 #include "LYUtils.h"
 #include "LYStruct.h"  /* includes HTForms.h */
 #include "LYString.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYKeymap.h"
 #include "LYSignal.h"
 
 #include "LYLeaks.h"
+
+#include <unistd.h>
 
 #ifndef BOXVERT
 #define BOXVERT '*'	/* character for popup window vertical borders */

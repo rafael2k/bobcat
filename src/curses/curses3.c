@@ -6,6 +6,8 @@
 
 #include "curses.h"
 #include <stdio.h>
+#include <unistd.h>
+#include <ctype.h>
 
 /* just to fill the gap for ELKS */
 int strnicmp(const char *s1, const char *s2, int n) {
@@ -54,9 +56,8 @@ void attrset(int attr) {
 	case A_REVERSE:
 		printf("7m");
 		break;
-	default:
+	default:;
 	}
-
 
 }
 
@@ -127,3 +128,22 @@ void wrefresh(WINDOW *w)
 {
     printf("\033[m");
 }
+
+void read_ansi_cursor_position(int *y, int *x) {
+    char buf[32];
+    int i = 0;
+    char c;
+
+    while (read(STDIN_FILENO, &c, 1) == 1) {
+        if (c == 'R') {
+            break; // Fim da resposta
+        }
+        buf[i++] = c;
+    }
+    buf[i] = '\0';
+
+    if (sscanf(buf, "\033[%d;%d", y, x) != 2) {
+        *y = *x = -1; // Erro ao ler as coordenadas
+    }
+}
+

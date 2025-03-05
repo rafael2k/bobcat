@@ -867,11 +867,12 @@ PRIVATE void split_line ARGS2(HText *,text, int,split)
 
     HTLine * line = (HTLine *)LY_CALLOC(sizeof(char), LINE_SIZE(MAX_LINE));
 
+#if 0
     if (line == NULL) {
 	howmuchheap();
 	outofmem(__FILE__, "split_line_1");
     }
-
+#endif
     ctrl_chars_on_this_line = 0; /*reset since we are going to a new line*/
     HTML_Last_Char=' ';
 
@@ -1026,10 +1027,12 @@ PRIVATE void split_line ARGS2(HText *,text, int,split)
      */
 
     temp = (HTLine *)LY_CALLOC(1, LINE_SIZE(previous->size));
+#if 0
     if (temp == NULL) {
 	howmuchheap();
 	outofmem(__FILE__, "split_line_2");
     }
+#endif
     memcpy(temp, previous, LINE_SIZE(previous->size));
     free(previous);
     previous = temp;
@@ -2741,6 +2744,7 @@ PUBLIC void HText_SubmitForm ARGS4(FormInfo *,submit_item, document *,doc,
 	anchor_ptr = anchor_ptr->next;
    }
 
+#if 0
     if (submit_item->submit_method == URL_MAIL_METHOD) {
 	if (strncmp(submit_item->submit_action, "mailto:", 7)) {
 	    HTAlert("BAD_FORM_MAILTO");
@@ -2763,6 +2767,7 @@ PUBLIC void HText_SubmitForm ARGS4(FormInfo *,submit_item, document *,doc,
     } else {
 	_statusline("SUBMITTING_FORM");
     }
+#endif
 
    if(submit_item->submit_method == URL_POST_METHOD) {
        doc->post_data = query;

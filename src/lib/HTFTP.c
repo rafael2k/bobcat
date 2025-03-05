@@ -129,8 +129,6 @@ typedef struct _connection {
 /*
  *	Some dos globals for screwy argument passing.
  */
-extern void *vp_msdosmem;
-extern void **vpp_msdosmem;
 
 #define PUTC(c) (*targetClass.put_character)(target, c)
 #define PUTS(s) (*targetClass.put_string)(target, s)

@@ -100,8 +100,8 @@ typedef struct window {
 typedef int chtype;
 
 /* for bobcat and to fill the gap for ELKS */
-int waddstr(WINDOW *w, char *str);
-int addstr(char *str);
+void waddstr(WINDOW *w, char *str);
+void addstr(char *str);
 void attrset(int attr);
 void wattrset(WINDOW *w, int attr);
 
@@ -130,3 +130,11 @@ void wbkgdset(WINDOW *w, int a);
 
 /* partially implemented functions for invaders */
 void mvprintw(int y, int x, const char *fmt, ...);
+
+void read_ansi_cursor_position(int *y, int *x);
+
+#define getyx(win, y, x) { \
+    printf("\033[6n");        \
+    fflush(stdout);           \
+    read_ansi_cursor_position(&(y), &(x)); \
+}

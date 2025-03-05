@@ -5,7 +5,7 @@
 #include "HTAccess.h"
 #include "LYUtils.h"
 #include "LYString.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYSignal.h"
 #include "GridText.h"
 #ifndef MSDOS
@@ -19,7 +19,7 @@
 #include "LYKeymap.h"
 #endif
 
-#include <process.h>
+// #include <process.h>
 
 #include "LYLeaks.h"
 
@@ -137,7 +137,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 #endif /* FANCY CURSES */
 	  /* never hide the cursor if there's no FANCY CURSES */
 	  move(links[cur].ly, links[cur].lx - 1);
-      }
+      // }
 
       if(flag)
           refresh();
@@ -713,7 +713,7 @@ PUBLIC char * quote_pathname ARGS1 (char *, pathname)
  * local domain
  *
  */
-#if defined(VMS) || defined(SGI) || defined(SCO) || defined(MSDOS)
+#if defined(VMS) || defined(SGI) || defined(SCO) || defined(MSDOS) || defined(__ELKS__)
 #ifndef NO_UTMP
 #define NO_UTMP
 #endif /* NO_UTMP */

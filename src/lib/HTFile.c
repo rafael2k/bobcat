@@ -217,8 +217,6 @@ PRIVATE void do_readme ARGS2(HTStructured *, target, CONST char *, localname)
 	
 	targetClass =  *target->isa;	/* (Can't init agregate in K&R) */
 
-{ extern void *vp_msdosmem;extern void **vpp_msdosmem;vp_msdosmem = NULL;vpp_msdosmem = NULL;}
-
 	START(HTML_PRE);
 	for(;;){
 	    char c = fgetc(fp);

@@ -139,7 +139,7 @@ PRIVATE void HTFWriter_free ARGS1(HTStream *, me)
 {
     fclose(me->fp);
     if (me->end_command) {		/* Temp file */
-        // _HTProgress(me->end_command);	/* Tell user what's happening */
+		_HTProgress(me->end_command);	/* Tell user what's happening */
 	system(me->end_command);
 	free (me->end_command);
 	if (me->remove_command) {

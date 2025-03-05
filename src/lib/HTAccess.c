@@ -781,7 +781,7 @@ PRIVATE BOOL HTLoadDocument ARGS4(
 	}
 #endif
 
-	//_HTProgress("Data transfer interrupted.");
+	_HTProgress("Data transfer interrupted.");
 	return NO;
     }
 
@@ -790,7 +790,7 @@ PRIVATE BOOL HTLoadDocument ARGS4(
 	StrAllocCopy(temp, "Can't Access `");
 	StrAllocCat(temp, full_address);
 	StrAllocCat(temp, "'");
-	// _HTProgress(temp);
+	_HTProgress(temp);
 	free(temp);
 #ifdef DT
 	if (TRACE) fprintf(stderr,

@@ -1252,13 +1252,14 @@ new_cmd:  /* a goto point for new input without going
 		       StrAllocCopy(newdoc.address, owner_address);
 
 		   } else {
+#if 0
 		     /* the owner_address is a mailto: url type */
 		       if(strchr(owner_address,':')!=NULL)
 			    /* send a reply. The address is after the colon */
 			 reply_by_mail(strchr(owner_address,':')+1,curdoc.address);
 		       else
 			 reply_by_mail(owner_address,curdoc.address);
-
+#endif
 		       refresh_screen=TRUE;  /* to force a showpage */
 		  }
 	       }

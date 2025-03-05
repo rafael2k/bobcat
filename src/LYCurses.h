@@ -13,6 +13,7 @@
 #endif /* CR */
 
 #include <curses.h>
+#include <unikey.h>
 
 #ifdef REDEFINE_CR
 #define CR FROMASCII('\015')

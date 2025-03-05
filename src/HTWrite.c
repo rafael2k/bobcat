@@ -19,7 +19,7 @@
 
 #include "LYString.h"
 #include "LYUtils.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYSignal.h"
 #include "LYSystem.h"
 #include "GridText.h"

@@ -42,11 +42,14 @@ PROG = bobcat
 
 # dont include  "LYCharSets.c"
 SRCS =  DefaultStyle.c  HTAlert.c  LYDownlo.c    LYHistor.c  LYLeaks.c   LYMainLoop.c  LYrcFile.c LYShowIn.c \
-     GridText.c      HTML.c        LYClean.c     LYEdit.c    LYJump.c    LYMail.c   LYOption.c    LYReadCF.c  LYString.c \
-     heap.c          LYBookmark.c  LYCurses.c    LYGetFil.c  LYKeymap.c  LYMain.c   LYPrint.c     LYSearch.c  LYUtils.c \
-     lib/HTAABrow.c lib/HTAAUtil.c lib/HTAssoc.c lib/HTBTree.c lib/HTFormat.c lib/HTGOPHER.c lib/HTList.c  lib/HTMLGen.c lib/HTRules.c  lib/HTTCP.c    lib/HTWSRC.c \
-     lib/HTAAProt.c lib/HTAccess.c lib/HTAtom.c  lib/HTChunk.c lib/HTFTP.c    lib/HTGroup.c  lib/HTMIME.c  lib/HTParse.c lib/HTString.c lib/HTTP.c lib/SGML.c \
-     lib/HTAAServ.c lib/HTAnchor.c lib/HTAuth.c  lib/HTFile.c  lib/HTFWrite.c lib/HTInit.c   lib/HTMLDTD.c lib/HTPlain.c lib/HTStyle.c  lib/HTWriter.c
+     GridText.c      HTML.c        LYClean.c     LYEdit.c    LYJump.c    LYOption.c    LYReadCF.c  LYString.c \
+     LYBookmark.c  LYCurses.c    LYGetFil.c  LYKeymap.c  LYMain.c   LYPrint.c     LYSearch.c  LYUtils.c LYEditMap.c HTWrite.c HTForms.c \
+     lib/HTAABrow.c  lib/HTAccess.c  lib/HTAuth.c    lib/HTFTP.c     lib/HTLex.c    lib/HTParse.c   lib/HTStyle.c   lib/HTWSRC.c \
+     lib/HTAAFile.c  lib/HTACL.c     lib/HTBTree.c   lib/HTFWrite.c  lib/HTList.c   lib/HTPasswd.c  lib/HTTCP.c     lib/SGML.c \
+     lib/HTAAProt.c  lib/HTAnchor.c  lib/HTChunk.c   lib/HTMIME.c   lib/HTPlain.c   lib/HTTP.c \
+     lib/HTAAServ.c  lib/HTAssoc.c   lib/HTFile.c    lib/HTGroup.c   lib/HTMLDTD.c  lib/HTRules.c   lib/HTUU.c \
+     lib/HTAAUtil.c  lib/HTAtom.c    lib/HTFormat.c  lib/HTInit.c    lib/HTMLGen.c  lib/HTString.c  lib/HTWriter.c \
+     curses/curses2.c curses/curses3.c curses/curses.c curses/unikey.c mem.c
 
 
 all: $(PROG)
@@ -58,4 +61,4 @@ bobcat: $(OBJS)
 
 
 clean:
-	rm -f $(PROG) *.obj lib/*.obj tmp.h
+	rm -f $(PROG) *.obj lib/*.obj curses/*.obj tmp.h

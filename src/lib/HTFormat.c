@@ -535,7 +535,7 @@ PUBLIC int HTCopy ARGS2(
 
         if (HTCheckForInterrupt())
           {
-			  // _HTProgress ("Data transfer interrupted.");
+			  _HTProgress ("Data transfer interrupted.");
             (*targetClass._abort)(sink, NULL);
 	    if(bytes)
                 rv = HT_INTERRUPTED;
@@ -551,7 +551,7 @@ PUBLIC int HTCopy ARGS2(
         if (status < 0) {
             if (status == HT_INTERRUPTED)
               {
-                // _HTProgress ("Data transfer interrupted.");
+                _HTProgress ("Data transfer interrupted.");
                 (*targetClass._abort)(sink, NULL);
 		if(bytes)
                     rv = HT_INTERRUPTED;

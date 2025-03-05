@@ -1,20 +1,22 @@
-#include <alloc.h>
+// #include <alloc.h>
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "HTFTP.h"
 #include "HTML.h"
 #include "LYUtils.h"
 #include "LYString.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYOption.h"
 #include "LYSignal.h"
 #include "LYClean.h"
-#include "LYCharSe.h"
+#include "LYCharSets.h"
 #include "LYKeymap.h"
 #include "LYrcFile.h"
 #include "HTAlert.h"
 
 #include "LYLeaks.h"
+
+#include <unistd.h>
 
 #define ACCEPT_DATA "Hit return to accept entered data"
 
@@ -174,13 +176,13 @@ PUBLIC void options ()
 			    }
 			    option_statusline(ACCEPT_DATA);
 			    move(L_EDITOR,34);
-			    standout();
+			    // standout();
 			    if(editor)
 				strcpy(display_option, editor);
 			    else
 				*display_option = '\0';
 			    ch = LYgetstr(display_option, VISIBLE);
-			    standend();
+			    // standend();
 			    move(L_EDITOR,34);
 			    if (!term_options && ch != -1 &&
 						 *display_option != '\0')
@@ -203,9 +205,9 @@ PUBLIC void options ()
 			    strcpy(display_option,display);
 			option_statusline(ACCEPT_DATA);
 			move(L_DISPLAY,34);
-			standout();
+			// standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			standend();
+			// standend();
 			move(L_DISPLAY,34);
 			if (term_options || ch == -1 ||
 					    *display_option == '\0')
@@ -231,13 +233,13 @@ PUBLIC void options ()
 			    }
 			    option_statusline(ACCEPT_DATA);
 			    move(L_HOME,34); 
-			    standout();
+			    // standout();
 			    if(bookmark_page)
 			  	strcpy(display_option, bookmark_page);
 			    else
 				*display_option = '\0';
 			    ch = LYgetstr(display_option, VISIBLE);
-			    standend();
+			    // standend();
 			    move(L_HOME,34);
 			    if (!term_options && ch != -1 &&
 						 *display_option != '\0')
@@ -258,9 +260,9 @@ PUBLIC void options ()
 			   strcpy(display_option,personal_mail_address);
 			option_statusline(ACCEPT_DATA);
 			move(L_MAIL_ADDRESS,34);
-			standout();
+			// standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			standend();
+			// standend();
 			move(L_MAIL_ADDRESS,34);
 			if (!term_options && ch != -1 &&
 					     *display_option != '\0')
@@ -268,7 +270,7 @@ PUBLIC void options ()
 			addstr(personal_mail_address ?
 			       personal_mail_address : "NONE");
 			break;
-
+#if 0
                 case 'z':
                         {
                            struct farheapinfo heap;
@@ -279,6 +281,7 @@ PUBLIC void options ()
 			   printf("Heap left: %ld",total);
 			   break;
 			}
+#endif
 			/* copy strings into choice array */
 /*
 		case 'f':
@@ -435,9 +438,9 @@ PUBLIC void options ()
 			    strcpy(display_option,language);
 			option_statusline(ACCEPT_DATA);
 			move(L_LANGUAGE,34);
-			standout();
+			// standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			standend();
+			// standend();
 			move(L_LANGUAGE,34);
 			if (term_options || ch == -1 ||
 					    *display_option == '\0')
@@ -533,12 +536,12 @@ PUBLIC int boolean_choice ARGS3(int,status, int,line, char **,choices)
 	option_statusline(ACCEPT_DATA);
 	/* highlight the current selection */
 	move(line,34);
-	standout();
+	// standout();
 	addstr(choices[status]);
 
 	option_statusline("Hit any key to change value; RETURN to accept");
 
-	standout();  /* option_statusline might turn it off */
+	// standout();  /* option_statusline might turn it off */
 
 	while(1) {
 	   move(line,34);
@@ -557,7 +560,7 @@ PUBLIC int boolean_choice ARGS3(int,status, int,line, char **,choices)
 
 		/* unhighlight selection */
 	        move(line,34);
-	        standend();
+	        //standend();
 	        addstr(choices[status]);
 	 	return(status);
 	    }

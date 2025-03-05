@@ -13,6 +13,8 @@
 
 #include "LYLeaks.h"
 
+#include <unistd.h>
+
 /*		HTML Object
 **		-----------
 */

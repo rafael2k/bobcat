@@ -1,12 +1,12 @@
-#include "spawno.h"
-#include "mail.h"
+//#include "spawno.h"
+#include "LYMail.h"
 #include "HTUtils.h"
 #include "LYCurses.h"
 #include "HTAccess.h"
 #include "GridText.h"
 #include "LYUtils.h"
 #include "LYPrint.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYSignal.h"
 #include "LYString.h"
 #include "LYClean.h"
@@ -164,6 +164,7 @@ PUBLIC int printfile ARGS1(document *,newdoc)
 		fclose(outfile_fp);
 		break;
 
+#if 0
 	case MAIL:
 	{
 		char tempfile[128];
@@ -227,6 +228,7 @@ PUBLIC int printfile ARGS1(document *,newdoc)
 
 		break;
 	}
+#endif
 
 	case TO_SCREEN:
 		pages = lines_in_file/(LYlines+1);

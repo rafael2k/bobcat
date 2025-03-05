@@ -489,14 +489,6 @@ PRIVATE void HTML_start_element ARGS4(
     int url_type;
 
 
-    {
-	    extern void *vp_msdosmem;
-	    extern void **vpp_msdosmem;
-	    if(vp_msdosmem) present = (BOOL *)vp_msdosmem;
-	    if(vpp_msdosmem) value = (char **)vpp_msdosmem;
-    }
-
-
     switch (element_number) {
 
     case HTML_BASE:

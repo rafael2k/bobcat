@@ -2,7 +2,7 @@
 #include "LYUtils.h"
 #include "LYString.h"
 #include "LYSearch.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "GridText.h"
 
 #include "LYLeaks.h"

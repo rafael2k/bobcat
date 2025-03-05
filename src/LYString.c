@@ -3,7 +3,7 @@
 #include "LYCurses.h"
 #include "LYUtils.h"
 #include "LYString.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "GridText.h"
 #include "LYKeymap.h"
 #include "LYSignal.h"
@@ -245,22 +245,27 @@ re_read:
 	case KEY_HOME:	           /* Home key (upward+left arrow) */
 	   c=HOME;
 	   break;
+#if 0
 	case KEY_CLEAR:	           /* Clear screen */
 	   c=18; /* CTRL-R */
 	   break;
+#endif
 	case KEY_NPAGE:	           /* Next page */
 	   c=PGDOWN;
 	   break;
 	case KEY_PPAGE:	           /* Previous page */
 	   c=PGUP;
 	   break;
+#if 0
 	case KEY_LL:	           /* home down or bottom (lower left) */
 	   c=END;
 	   break;
-                                        /* The keypad is arranged like this:*/
+#endif
+	   /* The keypad is arranged like this:*/
                                         /*    a1    up    a3   */
                                         /*   left   b2  right  */
                                         /*    c1   down   c3   */
+#if 0
 	case KEY_A1:	           /* upper left of keypad */
 	   c=HOME;
 	   break;
@@ -276,7 +281,9 @@ re_read:
 	case KEY_C3:	           /* lower right of keypad */
 	   c=PGDOWN;
 	   break;
-#ifdef KEY_END
+#endif
+//#ifdef KEY_END
+#if 1
 	case KEY_END:	           /* end key           001 */
 	   c=END;
 	   break;

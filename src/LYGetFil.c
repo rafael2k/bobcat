@@ -4,7 +4,7 @@
 #include "GridText.h"
 #include "HTAnchor.h"       /* Anchor class */
 #include "HTAccess.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 #include "LYUtils.h"
 #include "LYSignal.h"
 #include "LYGetFil.h"
@@ -17,7 +17,9 @@
 #include "LYMail.h"
 #include "LYSystem.h"
 #include "LYKeymap.h"
-#include "LYBookma.h"
+#include "LYBookmark.h"
+
+#include <unistd.h>
 
 #ifndef VMS
 #ifdef SYSLOG_REQUESTED_URLS
@@ -249,7 +251,7 @@ Try_Redirected_URL:
 			sleep(sleep_two);
 		    } else {
 			tmptr = (char *)strchr(doc->address,':')+1;
-                      reply_by_mail(tmptr,"");
+                      //reply_by_mail(tmptr,"");
 		    }
 		    return(NULLFILE);
 

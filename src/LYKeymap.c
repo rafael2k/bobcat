@@ -1,7 +1,7 @@
 #include "HTUtils.h"
 #include "LYUtils.h"
 #include "LYKeymap.h"
-#include "LYGlobal.h"
+#include "LYGlobalDefs.h"
 
 #include "LYLeaks.h"
 
