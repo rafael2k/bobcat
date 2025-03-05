@@ -20,6 +20,7 @@
  * No string substitutions can exceed 5 characeters.
  */
 
+#if 0
 /* 	Entity values -- for ISO Latin 1 local representation
 **
 **	This MUST match exactly the table referred to in the DTD!
@@ -135,7 +136,6 @@ PRIVATE char * ISO_Latin1[] = {
   	"\377",	/* small y, dieresis or umlaut mark - yuml */ 
 };
 
-#if 0
 /* 	Entity values -- for ISO Latin 2 local representation
 **
 **	This MUST match exactly the table referred to in the DTD!
@@ -1116,7 +1116,7 @@ PRIVATE char * SevenBitApproximations[] = {
  * Add the array name to LYCharSets
  */
 PUBLIC char ** LYCharSets[]={
-	ISO_Latin1,
+//	ISO_Latin1,
 //	ISO_Latin2,
 //	DEC_Multinational,
 	PC_charset,
@@ -1132,7 +1132,7 @@ PUBLIC char ** LYCharSets[]={
  * The order of LYCharSets and char_set_names MUST be the same
  */
 PUBLIC char * LYchar_set_names[]={
-	"ISO Latin 1         ",
+//	"ISO Latin 1         ",
 //	"ISO Latin 2         ",
 //	"DEC Multinational   ",
 	"IBM PC character set",
@@ -1152,7 +1152,7 @@ PUBLIC char * LYchar_set_names[]={
  * 'o'ptions (.lynxrc) to
  * set a different default.
  */
-PUBLIC char** p_entity_values = ISO_Latin1;	/* Pointer to translation */
+PUBLIC char** p_entity_values = PC_charset;	/* Pointer to translation */
 PUBLIC int current_char_set = 0;		/* Index for tranaslation */
 
 /*
