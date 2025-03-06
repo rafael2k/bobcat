@@ -136,3 +136,10 @@ void insertln() {
 void winsertln(WINDOW *w) {
     insertln();
 }
+
+void standout() {
+	printf("\033[7m");
+}
+void standend(){
+    printf("\033[0m");
+}

@@ -107,7 +107,8 @@ void attrset(int attr);
 void wattrset(WINDOW *w, int attr); // this just ignores the window
 void insertln();
 void winsertln(WINDOW *w); // this just ignores the window
-
+void standout();
+void standend();
 
 
 void clrscr();

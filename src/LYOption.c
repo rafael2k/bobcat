@@ -176,13 +176,13 @@ PUBLIC void options ()
 			    }
 			    option_statusline(ACCEPT_DATA);
 			    move(L_EDITOR,34);
-			    // standout();
+				standout();
 			    if(editor)
 				strcpy(display_option, editor);
 			    else
 				*display_option = '\0';
 			    ch = LYgetstr(display_option, VISIBLE);
-			    // standend();
+				standend();
 			    move(L_EDITOR,34);
 			    if (!term_options && ch != -1 &&
 						 *display_option != '\0')
@@ -205,9 +205,9 @@ PUBLIC void options ()
 			    strcpy(display_option,display);
 			option_statusline(ACCEPT_DATA);
 			move(L_DISPLAY,34);
-			// standout();
+			standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			// standend();
+			standend();
 			move(L_DISPLAY,34);
 			if (term_options || ch == -1 ||
 					    *display_option == '\0')
@@ -233,13 +233,13 @@ PUBLIC void options ()
 			    }
 			    option_statusline(ACCEPT_DATA);
 			    move(L_HOME,34); 
-			    // standout();
+				standout();
 			    if(bookmark_page)
 			  	strcpy(display_option, bookmark_page);
 			    else
 				*display_option = '\0';
 			    ch = LYgetstr(display_option, VISIBLE);
-			    // standend();
+				standend();
 			    move(L_HOME,34);
 			    if (!term_options && ch != -1 &&
 						 *display_option != '\0')
@@ -260,9 +260,9 @@ PUBLIC void options ()
 			   strcpy(display_option,personal_mail_address);
 			option_statusline(ACCEPT_DATA);
 			move(L_MAIL_ADDRESS,34);
-			// standout();
+			standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			// standend();
+			standend();
 			move(L_MAIL_ADDRESS,34);
 			if (!term_options && ch != -1 &&
 					     *display_option != '\0')
@@ -438,9 +438,9 @@ PUBLIC void options ()
 			    strcpy(display_option,language);
 			option_statusline(ACCEPT_DATA);
 			move(L_LANGUAGE,34);
-			// standout();
+			standout();
 			ch = LYgetstr(display_option, VISIBLE);
-			// standend();
+			standend();
 			move(L_LANGUAGE,34);
 			if (term_options || ch == -1 ||
 					    *display_option == '\0')
@@ -560,7 +560,7 @@ PUBLIC int boolean_choice ARGS3(int,status, int,line, char **,choices)
 
 		/* unhighlight selection */
 	        move(line,34);
-	        //standend();
+	        standend();
 	        addstr(choices[status]);
 	 	return(status);
 	    }

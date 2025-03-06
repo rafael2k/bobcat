@@ -61,9 +61,7 @@ typedef struct _HTSuffix {
 #endif /* NGROUPS */
 
 
-#define STRUCT_DIRENT struct direct
-
-#define GOT_READ_DIR 0
+#define GOT_READ_DIR 1
 #define STRUCT_DIRENT struct dirent
 
 #include "HTML.h"		/* For directory object building */
