@@ -201,37 +201,19 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
     char *cp;
     FILE *fp;
 
-    pgm = argv[0];
-    if ((cp = strrchr(pgm, '/')) != NULL) {
-	pgm = cp + 1;
-    }
+    StrAllocCopy(cdirbuffer, "");
 
-    StrAllocCopy(cdirbuffer, pgm);
+	char *ptrr;
 
-    {
-	char *ptr;
-	ptr = strrchr(cdirbuffer, '\\');
-	if (ptr != NULL)
-		*ptr = 0;
-    }
+	ptrr = getenv("HOME");
 
-    if( cdirbuffer[strlen(cdirbuffer)-1] != '\\')
-	 StrAllocCat(cdirbuffer, "\\");
-    {
-       char *ptrr;
-
-       ptrr = getenv("HOME");
-
-       if (ptrr) {
+	if (ptrr) {
 	    StrAllocCopy(chomedir,ptrr);
-	    if( chomedir[strlen(chomedir)-1] != '\\')
-		 StrAllocCat(chomedir, "\\");
-       }
-       else chomedir = cdirbuffer;
+	}
+	else chomedir = cdirbuffer;
 
-    }
 
-    {
+
 	char *ccp;
 
 	ccp=getenv("TEMP");
@@ -246,7 +228,6 @@ PUBLIC int main ARGS2(int,argc, char **,argv)
 	if( TEMP_SPACE[strlen(TEMP_SPACE)-1] != '\\')
 	    StrAllocCat(TEMP_SPACE, "\\");
 
-    }
 
     terminal = "vt100";
 
