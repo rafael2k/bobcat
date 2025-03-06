@@ -66,7 +66,7 @@ void tty_enable_unikey(void)
 void tty_fullbuffer(void)
 {
     fflush(stdout);
-#if ELKS
+#if __ELKS__
     /* use existing stdout buffer to save heap space */
     setvbuf(stdout, (char *)stdout->bufstart, _IOFBF, stdout->bufend - stdout->bufstart);
 #else
@@ -77,7 +77,7 @@ void tty_fullbuffer(void)
 void tty_linebuffer(void)
 {
     fflush(stdout);
-#if ELKS
+#if __ELKS__
     /* use existing stdout buffer to save heap space */
     setvbuf(stdout, (char *)stdout->bufstart, _IOLBF, stdout->bufend - stdout->bufstart);
 #else
@@ -87,7 +87,7 @@ void tty_linebuffer(void)
 
 int tty_iselksconsole(int fd)
 {
-#if ELKS
+#if __ELKS__
     char *p = ttyname(fd);
 
     if (!p) return 0;
