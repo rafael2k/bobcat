@@ -600,9 +600,9 @@ new_cmd:  /* jump here to skip user */
 		if(cur_selection-window_offset < 0) {
 #ifdef GOODCURSES
 		    wmove(form_window,1,2);
-		    winsertln(form_window);
 #endif
-			box(form_window, BOXVERT, BOXHORI);
+		    winsertln(form_window);
+		    box(form_window, BOXVERT, BOXHORI);
 		    window_offset--;
 		}
                 break;

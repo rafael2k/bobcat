@@ -52,6 +52,8 @@
 
 #include "LYLeaks.h"
 
+#include <unistd.h>
+
 /* PUBLIC						HTAAScheme_enum()
 **		TRANSLATE SCHEME NAME INTO
 **		A SCHEME ENUMERATION

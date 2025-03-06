@@ -104,7 +104,11 @@ typedef int chtype;
 void waddstr(WINDOW *w, char *str);
 void addstr(char *str);
 void attrset(int attr);
-void wattrset(WINDOW *w, int attr);
+void wattrset(WINDOW *w, int attr); // this just ignores the window
+void insertln();
+void winsertln(WINDOW *w); // this just ignores the window
+
+
 
 void clrscr();
 void stop_curses();

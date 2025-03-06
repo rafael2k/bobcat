@@ -128,3 +128,11 @@ void wrefresh(WINDOW *w)
 {
     printf("\033[m");
 }
+
+void insertln() {
+    printf("\033[s\033[1G\033[L\033[u");
+}
+
+void winsertln(WINDOW *w) {
+    insertln();
+}
