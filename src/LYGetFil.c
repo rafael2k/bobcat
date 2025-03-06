@@ -36,7 +36,7 @@ PRIVATE char * LYSanctify ARGS1(char *, href)
 {
     int i;
     char *p,*cp,*tp;
-    char address_buffer[1024];
+    char address_buffer[MAXFNAME];
 
     i = strlen(href) - 1;
     while (i && href[i] == '/') href[i--] = '\0';
@@ -191,7 +191,7 @@ Try_Redirected_URL:
 			      exec_ok(HTLoadedDocumentURL(),
 				      doc->address+9, EXEC_PATH))) {
 
-			char *cp, *p, addressbuf[1024];
+			char *cp, *p, addressbuf[MAXFNAME];
 
 			/* Bug puts slash on end if none is in the string */
 			char *last_slash = strrchr(doc->address,'/');

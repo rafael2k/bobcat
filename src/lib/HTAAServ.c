@@ -690,7 +690,7 @@ PUBLIC char *HTAA_composeAuthHeaders NOARGS
 
 
     FREE(result);	/* From previous call */
-    if (!(result = (char*)malloc(4096)))	/* @@ */
+    if (!(result = (char*)malloc(256)))	/* @@ */
 	outofmem(__FILE__, "HTAA_composeAuthHeaders");
     *result = (char)0;
 

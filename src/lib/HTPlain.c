@@ -11,7 +11,7 @@
 
 #include "HTPlain.h"
 
-#define BUFFER_SIZE 4096;	/* Tradeoff */
+#define BUFFER_SIZE 256;	/* Tradeoff */
 
 #include "HText.h"
 #include "HTStyle.h"

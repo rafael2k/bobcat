@@ -14,7 +14,7 @@
 
 #define HTTP_VERSION	"HTTP/1.0"
 
-#define INIT_LINE_SIZE		1024	/* Start with line buffer this big */
+#define INIT_LINE_SIZE		256	/* Start with line buffer this big */
 #define LINE_EXTEND_THRESH	256	/* Minimum read size */
 #define VERSION_LENGTH 		20	/* for returned protocol version */
 
@@ -931,7 +931,7 @@ once_again:
   
   if (!target || target == NULL) 
     {
-      char buffer[1024];	/* @@@@@@@@ */
+      char buffer[256];	/* @@@@@@@@ */
       sprintf(buffer, "Sorry, no known way of converting %s to %s.",
               HTAtom_name(format_in), HTAtom_name(format_out));
       _HTProgress (buffer);

@@ -1102,7 +1102,7 @@ PUBLIC HTParentAnchor * HTHomeAnchor NOARGS
     
 /* 	Someone telnets in, they get a special home.
 */
-#define MAX_FILE_NAME 1024					/* @@@ */
+#define MAX_FILE_NAME 256					/* @@@ */
     } else  if (HTClientHost) {			/* Telnet server */
     	FILE * fp = fopen(REMOTE_POINTER, "r");
 	char * status;

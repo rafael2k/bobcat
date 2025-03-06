@@ -120,7 +120,8 @@
  * note: STARTFILE must be a URL.  See the Lynx online help for more
  *       information on URL's
  */
-#define STARTFILE "http://frogfind.com/"
+#define STARTFILE "file://localhost/index.html"
+//  "http://frogfind.com/"
 /* #define STARTFILE "http://www.w3.org/default.html" */
 /* #define STARTFILE "http://kufacts.cc.ukans.edu/cwis/kufacts_start.html" */
 
@@ -532,10 +533,7 @@
  */
 
 #define LYNX_NAME "Lynx"
-#define LYNX_VERSION "2-4-2 (Bobcat/0.7 [DOS])"
-#ifndef MAXINT
-#define MAXINT 2147483647
-#endif /* !MAXINT */
+#define LYNX_VERSION "2-4-2 (Bobcat/0.8 [ELKS])"
 
 /* text strings for certain actions */
 /* changing these text strings is a way to customize 
@@ -596,11 +594,11 @@
 #define MAXBASE 100       /* max length of base directory */
 #define MAXHIGHLIGHT 160 /* max length of highlighted text */
 #define MAXTARGET 130    /* max length of target string */
-#define LINESIZE 512    /* max length of line to read from file*/
-#define MAXFNAME 640	/* max filename length DDD/FILENAME.EXT */
+#define LINESIZE 256    /* max length of line to read from file*/
+#define MAXFNAME 256	/* max filename length DDD/FILENAME.EXT */
 #define MAXCOMMAND MAXFNAME /* max length of command should be the same */
-#define MAXHIST  256	/* number of links we remember in history */
-#define MAXLINKS 256	/* max links on one screen */
+#define MAXHIST  16	/* number of links we remember in history */
+#define MAXLINKS 16	/* max links on one screen */
    /* traversal lookup table file, don't worry about it for now */
 #define TRAVERSE_FILE "/homea/local/lynx2-4/traverse.file"
 #define TRAVERSE_ERRORS "/homea/local/lynx2-4/traverse.errors"

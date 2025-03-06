@@ -434,7 +434,7 @@ PUBLIC HTAssocList *HTAA_parseArgList ARGS1(char *, str)
 
 /************** HEADER LINE READER -- DOES UNFOLDING *************************/
 
-#define BUFFER_SIZE	1024
+#define BUFFER_SIZE	256
 
 PRIVATE char buffer[BUFFER_SIZE + 1];
 PRIVATE char *start_pointer = buffer;

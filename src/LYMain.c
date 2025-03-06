@@ -931,9 +931,7 @@ PRIVATE void parse_arg ARGS3(char **, argv, int *, i, int, argc)
 Portions copyrighted by:\n \
 (c)1996,1997 Wayne Buttles (The Bobcat entity) \n \
 (c)GNU General Public License (Lynx base code)\n \
-(c)1990,1991,1992 Ralf Brown (SPAWNO v4.10)\n \
-(c)1990,1991,1992,1993 Erick Engelke and others (WATTCP)\n \
-Other copyrights held for the PDcurses, WATTCP and WWWLIB\n \
+Other copyrights held for WWWLIB\n \
 libraries can be found in the source distribution.\n \
 <http://www.fdisk.com/doslynx/>\n \
 Build: %s %s EST\n\n",
@@ -1038,7 +1036,7 @@ LYNX_NAME, LYNX_VERSION, __DATE__, __TIME__);
  	       strcmp(argv[0], "-get_data") == 0) { 	/* User data for post
  							   or get form. */
 	char **post_data;
-	char buf[1024];
+	char buf[LINESIZE];
 
         /* -post_data and -get_data conflict with curses when interactive
           * so let's force them to dump.  - CL
@@ -1179,15 +1177,6 @@ static void FatalProblem ARGS1(int,sig)
 {
 fprintf (stderr, "\r\nSorry, you have encountered a bug in %s Ver. %s\r\n",
 	LYNX_NAME, LYNX_VERSION);
-
-fprintf(stderr, "\r\nAmazingly, you made it to the FatalProblem \
-Module!  Please send a concise mail message to\r\n\
-doslynx-dev@raven.cc.ukans.edu describing what you were doing,\r\n\
-the URL you were looking at or attempting to access,\r\n\
-your operating system name with version number,\r\n\
-the TCP/IP implementation that your system is using,\r\n\
-and any other information you deem relevant.\r\n");
-
 
 fprintf(stderr, "\r\nDo not mail the core file if one was generated.\r\n");
 

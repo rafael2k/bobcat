@@ -57,8 +57,8 @@ void mainloop NOARGS
     int  c, real_c, old_c = 0, cmd, arrowup=FALSE, show_help=FALSE;
     int lines_in_file= -1;
     int newline;
-    char prev_target[512];
-    char user_input_buffer[1024];
+    char prev_target[256];
+    char user_input_buffer[512];
     char *owner_address;  /* holds the responsible owner's address */
     document newdoc, curdoc;
     BOOLEAN first_file=TRUE;
@@ -67,7 +67,7 @@ void mainloop NOARGS
 
 #ifdef DIRED_SUPPORT
    char *cp,*tp;
-   char tmpbuf[1024];
+   char tmpbuf[256];
    struct stat dir_info;
    taglink *t1,*t2;
 #endif /* DIRED_SUPPORT */

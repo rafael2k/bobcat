@@ -203,7 +203,7 @@ static void free_presentations NOARGS	{
 **	The input buffer size, if large will give greater efficiency and
 **	release the server faster, and if small will save space on PCs etc.
 */
-#define INPUT_BUFFER_SIZE 4096		/* Tradeoff */
+#define INPUT_BUFFER_SIZE 256		/* Tradeoff */
 PRIVATE char input_buffer[INPUT_BUFFER_SIZE];
 PRIVATE char * input_pointer;
 PRIVATE char * input_limit;
@@ -706,15 +706,15 @@ PUBLIC int HTParseSocket ARGS5(
 	 		sink , anchor);
     
     if (!stream) {
-	char buffer[1024];	/* @@@@@@@@ */
+		char buffer[128];	/* @@@@@@@@ */
         if (LYCancelDownload) {
-	    LYCancelDownload = FALSE;
-	    return -1;
-	}
-	sprintf(buffer, "Sorry, can't convert from %s to %s.",
-	        HTAtom_name(rep_in), HTAtom_name(format_out));
+			LYCancelDownload = FALSE;
+			return -1;
+		}
+		sprintf(buffer, "Sorry, can't convert from %s to %s.",
+				HTAtom_name(rep_in), HTAtom_name(format_out));
 #ifdef DT
-	if (TRACE) fprintf(stderr, "HTFormat: %s\n", buffer);
+		if (TRACE) fprintf(stderr, "HTFormat: %s\n", buffer);
 #endif
 
         return HTLoadError(sink, 501, buffer); /* returns -501 */
@@ -757,7 +757,7 @@ PUBLIC int HTParseFile ARGS5(
 	 		sink , anchor);
     
     if (!stream) {
-        char buffer[1024];	/* @@@@@@@@ */
+        char buffer[128];	/* @@@@@@@@ */
 	extern char LYCancelDownload;
         if (LYCancelDownload) {
 	    LYCancelDownload = FALSE;

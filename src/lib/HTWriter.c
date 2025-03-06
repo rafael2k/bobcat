@@ -7,7 +7,7 @@
 
 #include "HTWriter.h"
 
-#define BUFFER_SIZE 4096	/* Tradeoff */
+#define BUFFER_SIZE 256	/* Tradeoff */
 
 /*#include <stdio.h> included by HTUtils.h -- FM */
 

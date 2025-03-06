@@ -109,7 +109,7 @@ typedef struct _EditFieldData {
         int  pos;       /* Insertion point in string                 */
         int  margin;    /* Number of columns look-ahead/look-back    */
 
-        char buffer[1024]; /* String buffer                          */
+        char buffer[512]; /* String buffer                          */
 
 } EditFieldData;
 

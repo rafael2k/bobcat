@@ -162,7 +162,7 @@ struct MailcapEntry {
 PRIVATE int ExitWithError PARAMS((char *txt));
 PRIVATE int PassesTest PARAMS((struct MailcapEntry *mc));
 
-#define LINE_BUF_SIZE       2000
+#define LINE_BUF_SIZE       256
 #define TMPFILE_NAME_SIZE 127
 
 PRIVATE char *GetCommand ARGS2(char *,s, char **,t)
@@ -235,7 +235,7 @@ PRIVATE int ProcessMailcapEntry ARGS2(FILE *,fp, struct MailcapEntry *,mc)
         if (LineBuf[len-1] == '\n') 
 	  LineBuf[--len] = 0;
 	if ((len + strlen(rawentry)) > rawentryalloc) {
-	    rawentryalloc += 2000;
+	    rawentryalloc += LINE_BUF_SIZE;
 	    rawentry = realloc(rawentry, rawentryalloc+1);
 	    if (!rawentry) ExitWithError("Out of memory");
 	}
@@ -479,7 +479,7 @@ PRIVATE int PassesTest ARGS1(struct MailcapEntry *,mc)
      * Build the command and execute it.
      */
     tempname(TmpFileName, NEW_FILE);
-    cmd = (char *)malloc(1024);
+    cmd = (char *)malloc(256);
     if (!cmd) ExitWithError("Out of memory");
     BuildCommand(cmd, mc->testcommand, TmpFileName);
 #ifdef DT
