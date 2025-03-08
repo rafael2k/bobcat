@@ -15,6 +15,7 @@ CLBASE = -mcmodel=l
 CLBASE += -bnone -march=i86 -std=c99
 CLBASE += -fno-stack-check -fnostdlib -fsigned-char
 CLBASE += -Wc,-fpc -Wc,-zev -Wc,-zls -Wc,-x -Wc,-wcd=303 -Wc,-zt512
+# CLBASE += -Wc,-fpi87 -Wc,-zev -Wc,-zls -Wc,-x -Wc,-wcd=303 -Wc,-zt512
 WARNINGS = -Wall -Wextra
 INCLUDES = -I$(TOPDIR)/libc/include -I$(TOPDIR)/elks/include
 INCLUDES += -I$(TOPDIR)/libc/include/watcom
@@ -51,7 +52,7 @@ SRCS =  DefaultStyle.c  HTAlert.c  LYDownlo.c    LYHistor.c  LYLeaks.c   LYMainL
      lib/HTBTree.c   lib/HTFWrite.c     lib/HTPasswd.c  lib/HTTCP.c \
      lib/HTAssoc.c   lib/HTFile.c    lib/HTMLDTD.c     lib/HTUU.c \
      lib/HTAtom.c    lib/HTFormat.c  lib/HTInit.c    lib/HTMLGen.c  lib/HTString.c  lib/HTWriter.c \
-     lib/HTGroup.c lib/HTACL.c  lib/HTAAServ.c lib/HTAAProt.c lib/HTAAFile.c lib/HTAABrow.c lib/HTRules.c lib/HTAAUtil.c \
+     lib/HTRules.c lib/HTAAUtil.c lib/HTAAProt.c lib/HTAABrow.c  lib/HTAAFile.c lib/HTAAServ.c lib/HTACL.c lib/HTGroup.c \
 
 all: $(PROG)
 

@@ -14,6 +14,8 @@
 #endif /* UNIX */
 #endif /* msdos */
 
+#include <time.h>
+#include <unistd.h>
 
 #ifdef DISP_PARTIAL
 #include "LYKeymap.h"
@@ -713,7 +715,7 @@ PUBLIC char * quote_pathname ARGS1 (char *, pathname)
  * local domain
  *
  */
-#if defined(VMS) || defined(SGI) || defined(SCO) || defined(MSDOS) || defined(__ELKS__)
+#if defined(VMS) || defined(SGI) || defined(SCO) || defined(MSDOS) || defined(__ELKS__) || defined(__linux__)
 #ifndef NO_UTMP
 #define NO_UTMP
 #endif /* NO_UTMP */

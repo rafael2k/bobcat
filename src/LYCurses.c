@@ -9,6 +9,8 @@
 #include "LYexit.h"
 #include "LYLeaks.h"
 
+#include <stdio.h>
+
 /*
  * These are routines to start and stop curses and to cleanup
  * the screen at the end

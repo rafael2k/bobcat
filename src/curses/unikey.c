@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
+#if !__ELKS__
+#include <poll.h>
+#endif
+
 #include "unikey.h"
 
 #define ANSI_UTF8       0       /* =1 to decode UTF-9 in readansi() */

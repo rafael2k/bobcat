@@ -1,4 +1,9 @@
 /* curses.h workaround - Greg Haerr*/
+
+
+#ifndef __CURSES__H
+#define __CURSES__H
+
 #include "unikey.h"
 
 #define KEY_BACKSPACE   kBackSpace
@@ -58,7 +63,7 @@ void *initscr();
 void endwin();
 int has_colors();
 void erase();
-void nodelay();
+void nodelay(void *win, int flag);
 #define cbreak()
 #define noecho()
 #define echo()
@@ -141,3 +146,5 @@ void mvprintw(int y, int x, const char *fmt, ...);
 #define getyx(win, y, x) { \
 	tty_getsize(&x, &y); \
 }
+
+#endif

@@ -343,7 +343,7 @@ PUBLIC void read_cfg ARGS1(char *,cfg_filename)
 	} else if(!strncasecomp(buffer,"TEXT_NORMAL:",12)) {
 
 	    char temp[2];
-	    temp[1] = NULL;
+	    temp[1] = 0;
 
 	    temp[0] = buffer[12];
 	    normal_fore = atoi(temp);
@@ -358,7 +358,7 @@ PUBLIC void read_cfg ARGS1(char *,cfg_filename)
 	} else if(!strncasecomp(buffer,"TEXT_BOLD:",10)) {
 
 	    char temp[2];
-	    temp[1] = NULL;
+	    temp[1] = 0;
 
 	    temp[0] = buffer[10];
 	    bold_fore = atoi(temp);
@@ -373,7 +373,7 @@ PUBLIC void read_cfg ARGS1(char *,cfg_filename)
 	} else if(!strncasecomp(buffer,"TEXT_UNDERLINE:",15)) {
 
 	    char temp[2];
-	    temp[1] = NULL;
+	    temp[1] = 0;
 
 	    temp[0] = buffer[15];
 	    underline_fore = atoi(temp);
@@ -388,7 +388,7 @@ PUBLIC void read_cfg ARGS1(char *,cfg_filename)
 	} else if(!strncasecomp(buffer,"TEXT_REVERSE:",13)) {
 
 	    char temp[2];
-	    temp[1] = NULL;
+	    temp[1] = 0;
 
 	    temp[0] = buffer[13];
 	    reverse_fore = atoi(temp);

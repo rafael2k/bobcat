@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <stdarg.h>
+
 
 /* just to fill the gap for ELKS */
 int strnicmp(const char *s1, const char *s2, int n) {

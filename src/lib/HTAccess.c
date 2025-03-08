@@ -32,6 +32,8 @@
 **	defined which accepts select and select_anchor.
 */
 
+#include <time.h>
+
 #ifdef VMS
 #define DIRECT_WAIS
 #endif /* VMS */
