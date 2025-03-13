@@ -120,8 +120,8 @@
  * note: STARTFILE must be a URL.  See the Lynx online help for more
  *       information on URL's
  */
-#define STARTFILE "file://localhost/index.html"
-//  "http://frogfind.com/"
+#define STARTFILE "http://www.frogfind.com/"
+//  "http://www.frogfind.com/http://frogfind.com/"
 /* #define STARTFILE "http://www.w3.org/default.html" */
 /* #define STARTFILE "http://kufacts.cc.ukans.edu/cwis/kufacts_start.html" */
 
