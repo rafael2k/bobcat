@@ -62,7 +62,7 @@ uint16_t isaddr( char *text )
     return( 1 );
 }
 
-#if !defined(__linux__) && !defined(__ELKS__)
+#ifdef __ELKS__
 uint32_t inet_addr( char *s )
 {
     return( isaddr( s ) ? in_aton( s ) : 0 );
@@ -319,26 +319,14 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 	sin->sin_addr.s_addr = inet_addr(host); /* See arpa/inet.h */
 
     } else {		    /* Alphanumeric node name: */
-#ifdef MVS	/* Oustanding problem with crash in MVS gethostbyname */
-#ifndef DT
-	if(TRACE)fprintf(stderr, "HTTCP: Calling gethostbyname(%s)\n", host);
-#endif /* DT */
-#endif
+        _HTProgress ("DNS not supported yet");
+#ifndef __ELKS__
 	phost = gethostbyname(host);	/* See netdb.h */
-#ifdef MVS
-#ifndef DT
-	if(TRACE)fprintf(stderr, "HTTCP: gethostbyname() returned %d\n", phost);
-#endif /* DT */
-#endif
 	if (!phost) {
-#ifndef DT
-	    if (TRACE) fprintf(stderr,
-		    "HTTPAccess: Can't find internet node name `%s'.\n",host);
-#endif /* DT */
-        
 	    return -1;  /* Fail? */
 	}
 	memcpy(&sin->sin_addr, gethostbyname(host), 4);
+#endif
     }
 
 #ifndef DT
