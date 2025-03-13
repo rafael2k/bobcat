@@ -197,7 +197,6 @@ extern HTChildAnchor * HTAnchor_findChildAndLink
       fprintf(stderr,"Entered HTAnchor_findChildAndLink Parent: %s Tag: %s Href: %s Ltype%s\n",
         parent,tag,href,ltype);
 #endif
-
   if (href && *href) {
     auto char *relative_to = HTAnchor_address((HTAnchor *)parent);
     DocAddress parsed_doc;
@@ -745,6 +744,14 @@ BOOL HTAnchor_link
 {
   if (! (source && destination))
     return NO;  /* Can't link to/from non-existing anchor */
+
+#if 0
+  if (type == NULL)
+  {
+      return NO;
+  }
+#endif
+  
 #ifdef DT
   if (TRACE) fprintf(stderr,
   		     "Linking anchor %p to anchor %p\n", source, destination);

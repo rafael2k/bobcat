@@ -24,44 +24,14 @@ void *capmalloc(size_t size)	{
 }
 
 void *capcalloc(size_t nitems, size_t size)	{
-//	Purpose:	Mimic calloc with new.
-//	Arguments:      nitems	The number of items of size to allocate.
-//			size	The amount of memory to dynamically allocate
-//				for each item.
-//	Return Value:	void *	A pointer to the allocated memory or
-//				NULL on failure.
-//	Remarks/Portability/Dependencies/Restrictions:
-//	Revision History:
-//		02-25-94	created
+    size_t total = nitems * size;
+    void *ptr = malloc(total);
 
-	return malloc(nitems * size);
-#if 0 // removed by rafael2k - 2025
-	//	Allocate and initialize the block.
-	char *cp_block = new char[nitems * size];
-	if(cp_block == NULL)	{
-		return(NULL);
-	}
-
-	for(size_t count = 0; count < nitems * size; count++)	{
-		*(cp_block + count) = '\0';
-	}
-
-	return((void *)cp_block);
-#endif
+    memset(ptr, 0, total);
 }
 
 void capfree(void *block)	{
-//	Purpose:	Mimic free with delete.
-//	Arguments:	block	A pointer to the memory to be freed.
-//	Return Value:	void
-//	Remarks/Portability/Dependencies/Restrictions:
-//		Memory to be freed is expected to be created using one of
-//		the above functions.  If it is not, results, as I know of,
-//		will be undefined.
-//	Revision History:
-//		02-25-94	created
 	free(block);
-	// delete[]((char *)block);
 }
 
 
@@ -78,27 +48,18 @@ void *caprealloc(void *block, size_t size)	{
 //	Revision History:
 //		02-25-94	created
 
-	return realloc(block, size);
+    if(size == 0)	
+        return(NULL);
 
-#if 0
-	if(block == NULL)	{
-		return(capmalloc(size));
-	}
-	else if(size == 0)	{
-		return(NULL);
-	}
+    void *newblock = malloc(size);
+    
+    if (block == NULL)
+        return newblock;
 
-	//	First allocate a new block, if can't return.
-	void *newblock = capmalloc(size);
-	if(newblock == NULL)
-		return(NULL);
+    memcpy(newblock, block, size);
 
-	//	Since really don't know size of old block, copy over size
-	//	bytes from oldblock to new block.
-	memcpy(newblock, block, size);
+    free(block);
 
-	//	Release the old block, return the new.
-	capfree(block);
-	return(newblock);
-#endif
+    return (newblock);
+
 }

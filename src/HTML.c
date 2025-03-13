@@ -2136,12 +2136,14 @@ PRIVATE void HTML_end_element ARGS2(HTStructured *, me, int , element_number)
 		 */
     default:
 	change_paragraph_style(me, me->sp->style);  /* Often won't really change */
+#if FIXME
 	if (styles[element_number]->font & HT_BOLD) {
 	    if (B_inA == FALSE && B_inBoldH == TRUE) {
 		HText_appendCharacter(me->text,LY_BOLD_END_CHAR);
 	    }
 	    B_inBoldH = FALSE;
 	}
+#endif
 	break;
 
     } /* switch */

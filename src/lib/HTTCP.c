@@ -62,11 +62,12 @@ uint16_t isaddr( char *text )
     return( 1 );
 }
 
+#if !defined(__linux__) && !defined(__ELKS__)
 uint32_t inet_addr( char *s )
 {
     return( isaddr( s ) ? in_aton( s ) : 0 );
 }
-
+#endif
 
 #ifdef SHORT_NAMES
 #define HTInetStatus		HTInStat
@@ -323,7 +324,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 	if(TRACE)fprintf(stderr, "HTTCP: Calling gethostbyname(%s)\n", host);
 #endif /* DT */
 #endif
-	phost = in_gethostbyname(host);	/* See netdb.h */
+	phost = gethostbyname(host);	/* See netdb.h */
 #ifdef MVS
 #ifndef DT
 	if(TRACE)fprintf(stderr, "HTTCP: gethostbyname() returned %d\n", phost);
@@ -337,7 +338,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
         
 	    return -1;  /* Fail? */
 	}
-	memcpy(&sin->sin_addr, in_gethostbyname(host), 4);
+	memcpy(&sin->sin_addr, gethostbyname(host), 4);
     }
 
 #ifndef DT
@@ -428,7 +429,7 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
   /* Set up defaults: */
   sin->sin_family = AF_INET;
   sin->sin_port = htons(default_port);
-
+  
   /* Get node name and optional port number: */
   {
     char line[256];
@@ -447,27 +448,26 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 
     status = HTParseInet(sin, host);
     if (status)
-      {
+    {
         sprintf (line, "Unable to locate remote host %s.", host);
         _HTProgress(line);
 	free (p1);
 	return -1;
-      }
-
+    }
     sprintf (line, "Making %s connection to %s.", protocol, host);
     _HTProgress (line);
     free (p1);
   }
 
   /* Now, let's get a socket set up from the server for the data: */
-  *s = socket(AF_INET, SOCK_STREAM, AF_INET);
+  *s = socket(AF_INET, SOCK_STREAM, 0);
 
   /*
    * Issue the connect.  Since the server can't do an instantaneous accept
    * and we are non-blocking, this will almost certainly return a negative
    * status.
    */
-
+#if 0
    if(HTCheckForInterrupt())
    {
 #ifdef DL
@@ -476,9 +476,10 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 #endif
       status = HT_INTERRUPTED;
       SOCKET_ERRNO = EINTR;
+
       return -1;
    }
-
+#endif
 
   status = connect(*s, (struct sockaddr*)&soc_address, sizeof(soc_address));
 

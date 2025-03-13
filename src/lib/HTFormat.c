@@ -479,7 +479,7 @@ PUBLIC long HTStackValue ARGS4(
 	}
     }
     
-    return -1e30;		/* Really bad */
+    return -2147483646L;		/* Really bad */
 
 }
 	
@@ -533,9 +533,10 @@ PUBLIC int HTCopy ARGS2(
 	    goto finished;
 	}
 
+#if 0
         if (HTCheckForInterrupt())
           {
-			  _HTProgress ("Data transfer interrupted.");
+              _HTProgress ("Data transfer interrupted.");
             (*targetClass._abort)(sink, NULL);
 	    if(bytes)
                 rv = HT_INTERRUPTED;
@@ -543,12 +544,15 @@ PUBLIC int HTCopy ARGS2(
 		rv = -1;
 	    goto finished;
           }
-
+#endif
         status = NETREAD(file_number, input_buffer, INPUT_BUFFER_SIZE);
 
-        if (status == 0) 
-              break;
+        if (status == 0)
+        {
+            break;
+        }
         if (status < 0) {
+
             if (status == HT_INTERRUPTED)
               {
                 _HTProgress ("Data transfer interrupted.");
@@ -585,7 +589,6 @@ PUBLIC int HTCopy ARGS2(
 	bytes += status;
 	sprintf(line, msg, bytes, loading_length);
         HTProgress(line);
-
     } /* next bufferload */
 
     // _HTProgress("Data transfer complete");

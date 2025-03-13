@@ -172,7 +172,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
       status = HT_NO_DATA;
       goto done;
     }
-  
+
   /*	Ask that node for the document,
    **	omitting the host name & anchor
    */        
@@ -207,6 +207,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
     }
   
   strcat(command, crlf);	/* CR LF, as in rfc 977 */
+
   
   if (extensions) 
     {
@@ -248,6 +249,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
 
       if (!HTPresentations) HTFormatInit();
       n = HTList_count(HTPresentations);
+
       
       for(i=0; i<n; i++) 
         {
@@ -262,7 +264,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
               StrAllocCat(command, line);
             }
 	}
-
+      
       if (language) {
 	  sprintf(line, "Accept-Language: %s; q=1%c%c", language, CR, LF);
 	  StrAllocCat(command, line);
@@ -382,7 +384,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
   
   _HTProgress ("Sending HTTP request.");
 
-  status = NETWRITE(s, command, (int)strlen(command));
+  status = NETWRITE(s, command, (int)strlen(command));  
   free (command);
   if (status <= 0) 
     {
@@ -428,14 +430,13 @@ PUBLIC int HTLoadHTTP ARGS4 (
           goto done;
         }
     }
-  
+
 #ifdef DT
   if (TRACE)
     fprintf (stderr, "HTTP: WRITE delivered OK\n");
 #endif
 
   _HTProgress ("HTTP request sent; waiting for response.");
-
   /*	Read the first line of the response
    **	-----------------------------------
    */
@@ -447,6 +448,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
     int buffer_length = INIT_LINE_SIZE;
     
     line_buffer = (char *) malloc(buffer_length * sizeof(char));
+
     
     do 
       {	/* Loop to read in the first line */
@@ -457,6 +459,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
             line_buffer = 
               (char *) realloc(line_buffer, buffer_length * sizeof(char));
           }
+        _HTProgress ("HTTP: Trying to read");
 #ifdef DT
         if (TRACE)
           fprintf (stderr, "HTTP: Trying to read %d\n",
@@ -481,7 +484,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
 		  fprintf (stderr, "HTTP: Interrupted initial read.\n");
 #endif
 
-                _HTProgress ("Connection interrupted.");
                 status = HT_INTERRUPTED;
                 goto clean_up;
               }
@@ -497,7 +499,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
                 if (TRACE)
                   fprintf (stderr, "HTTP: BONZO Trying again with HTTP0 request.\n");
 #endif
-
                 NETCLOSE(s);
                 if (line_buffer) 
                   free(line_buffer);
@@ -512,6 +513,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
 #endif
             else
               {
+
 #ifdef DT
                 if (TRACE)
                   fprintf (stderr, "HTTP: Hit unexpected network read error; aborting connection; status %d.\n", status);
@@ -525,12 +527,14 @@ PUBLIC int HTLoadHTTP ARGS4 (
               }
           }
 
+        
         bytes_already_read += status;
         {
           char line[256];
 	  sprintf (line, "Read %ld bytes of data.", bytes_already_read);
           HTProgress (line);
         }
+
         
 #ifdef UCX  /* UCX returns -1 on EOF */
         if (status == 0 || status == -1) 
@@ -569,8 +573,10 @@ PUBLIC int HTLoadHTTP ARGS4 (
     /* Well, let's try 100. */
     while (!eol && !end_of_file && bytes_already_read < 100);
   } /* Scope of loop variables */
-    
-    
+
+
+
+  
   /*	We now have a terminated unfolded line. Parse it.
    **	-------------------------------------------------
    */
@@ -580,33 +586,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
 #endif
 
   
-/* Kludge to work with old buggy servers and the VMS Help gateway.
-** They can't handle the third word, so we try again without it.
-*/
-  if (extensions &&       /* Old buggy server or Help gateway? */
-      (0==strncmp(line_buffer,"<TITLE>Bad File Request</TITLE>",31) ||
-       0==strncmp(line_buffer,"Address should begin with",25) ||
-       0==strncmp(line_buffer,"<TITLE>Help ",12) ||
-       0==strcmp(line_buffer,
-       		 "Document address invalid or access not authorised"))) {
-      if (line_buffer)
-	  free(line_buffer);
-      if (line_kept_clean) 
-          free(line_kept_clean);
-      extensions = NO;
-      already_retrying = 1;
-#ifdef DT
-      if (TRACE) fprintf(stderr,
-			 "HTTP: close socket %d to retry with HTTP0\n", s);
-#endif
-
-      NETCLOSE(s);
-      /* print a progress message */
-      _HTProgress ("Retrying as HTTP0 request.");
-      goto try_again;
-  }
-
-
   {
     int fields;
     char server_version[VERSION_LENGTH+1];
@@ -622,7 +601,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
     if (TRACE)
       fprintf (stderr, "HTTP: Scanned %d fields from line_buffer\n", fields);
 #endif
-
     
     if (http_error_file) {     /* Make the status code externally available */
 	FILE *error_file;
@@ -668,6 +646,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
       {
         /* Decode full HTTP response */
         format_in = HTAtom_for("www/mime");
+
         /* We set start_of_data to "" when !eol here because there
            will be a put_block done below; we do *not* use the value
            of start_of_data (as a pointer) in the computation of
@@ -680,15 +659,13 @@ PUBLIC int HTLoadHTTP ARGS4 (
           fprintf (stderr, "--- Talking HTTP1.\n");
 #endif
 
-        
         switch (server_status / 100) 
           {
           case 3:		/* Various forms of redirection */
- 
+              
            if (no_url_redirection) { /* We want to see Location: */
 	       break;
 	   }
-
 
             /*
 	     * We do not load the file, but read the header for
@@ -705,6 +682,7 @@ PUBLIC int HTLoadHTTP ARGS4 (
 #endif
 
 once_again:
+
 	    /*
 	     * Look for the "Location: " in the header. - FM
 	     */
@@ -770,7 +748,6 @@ once_again:
                             fprintf(stderr, "HTTP: Going to cleanup.");
 #endif
 
-
 		        NETCLOSE(s);
 		        goto clean_up;
 		    }
@@ -787,7 +764,9 @@ once_again:
 	     * change this, someday, to get the entire header unfolded
 	     * at the outset, but this works fine, for now. - FM
 	     */
+
 	    status = NETREAD(s, line_buffer, INIT_LINE_SIZE);
+
             if (status <= 0) {
                 if (status == HT_INTERRUPTED) {
 		    /*
@@ -834,6 +813,7 @@ once_again:
 	   }
             
           case 4:		/* "I think I goofed" */
+
             switch (server_status) 
               {
               case 403:
@@ -903,6 +883,7 @@ once_again:
             break;
 
           case 5:		/* I think you goofed */
+
             break;
             
           case 2:		/* Good: Got MIME object */
@@ -920,6 +901,7 @@ once_again:
       }	/* Full HTTP reply */
   } /* scope of fields */
 
+  
   /* Set up the stream stack to handle the body of the message */
   if (keep_mime_headers) { /* We want to see all the mime lines*/
       format_in = HTAtom_for("www/source");
@@ -928,6 +910,7 @@ once_again:
   target = HTStreamStack(format_in,
                          format_out,
                          sink, anAnchor);
+    
   
   if (!target || target == NULL) 
     {
@@ -942,16 +925,22 @@ once_again:
   /* Recycle the first chunk of data, in all cases. */
   (*target->isa->put_block)(target, start_of_data, length);
 
+
+  
 #ifdef DISP_PARTIAL
   dp_dl_on = dp_newline = 1 ;
 #endif
+
   /* Go pull the bulk of the data down. */
   rv = HTCopy(s, target);
 
+  
 #ifdef DISP_PARTIAL
   dp_dl_on = 0 ;
 #endif
 
+
+  
   if (rv == -1)
     {
       /* Intentional interrupt before data were received, not an error */
@@ -982,6 +971,7 @@ once_again:
       goto try_again;
     }
 
+
   /* 
    * Close socket if partial transmission (was freed on abort)
    * Free if complete transmission (socket was closed before return)
@@ -1002,7 +992,7 @@ once_again:
          in external variable redirecting_url, exported from HTMIME.c,
          since there's no straightforward way to do this in the library
          currently.  Do the right thing. */
-      status = HT_REDIRECTING;
+        status = HT_REDIRECTING;
     }
   else
     {

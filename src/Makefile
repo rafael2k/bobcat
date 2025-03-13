@@ -1,14 +1,5 @@
 # C86 Makefile for ELKS using OpenWatcom C
 
-############# Standard Section for Open Watcom C ##############
-ifndef TOPDIR
-$(error ELKS TOPDIR is not defined)
-endif
-
-ifndef WATCOM
-$(error OpenWatcom WATCOM is not defined)
-endif
-
 CC = gcc
 LD = gcc
 CLBASE = -std=gnu99
@@ -16,7 +7,7 @@ WARNINGS = -Wall
 #INCLUDES += -I$(TOPDIR)/libc/include/watcom
 INCLUDES += -Ilib -Icurses -I.
 DEFINES = -Dunix
-CFLAGS = -Os $(CLBASE) $(WARNINGS) $(INCLUDES) $(DEFINES) $(LOCALFLAGS)
+CFLAGS = -O0 -g $(CLBASE) $(WARNINGS) $(INCLUDES) $(DEFINES) $(LOCALFLAGS)
 LDBASE =
 #LDBASE += -Wl,option -Wl,dosseg
 #LDBASE += -Wl,option -Wl,start=_start
@@ -25,6 +16,7 @@ LDBASE =
 #LDBASE += -Wl,option -Wl,heapsize=512
 LDFLAGS = $(LDBASE)
 #LDLIBS = -Wl,library -Wl,$(TOPDIR)/libc/libc.lib
+LDLIBS=-lcrypt
 
 OBJS = $(SRCS:.c=.obj)
 %.obj: %.c
