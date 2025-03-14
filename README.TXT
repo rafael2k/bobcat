@@ -1,5 +1,10 @@
-   This is a port of BOBCAT to ELKS. Still in early stages. To compile,
-   run "make -f Makefile.elks" from inside "src" directory.
+   This is a port of BOBCAT (Lynx for DOS) to ELKS (and Linux). To compile,
+   run "make -f Makefile.elks" from inside "src" directory. For Linux, use
+   the "Makefile" to compile.
+
+   Binary releases are available in "Releases" page.
+
+   Follows the original README.
 
 
                              LYNX FOR DOS (BOBCAT)
