@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
 
 
 
@@ -449,7 +450,23 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 
   /* Now, let's get a socket set up from the server for the data: */
   *s = socket(AF_INET, SOCK_STREAM, 0);
+  if (*s < 0)
+      return -1;
 
+  if (bind(*s, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr_in)) < 0)
+      return -1;
+
+  struct linger l;
+  l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
+  l.l_linger = 0;	/* must be 0 to turn on option*/
+  setsockopt(*s, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
+
+  if (!sin->sin_addr.s_addr)
+      return -1;
+
+  status = in_connect(*s, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr_in), 10);
+
+  
   /*
    * Issue the connect.  Since the server can't do an instantaneous accept
    * and we are non-blocking, this will almost certainly return a negative
@@ -468,8 +485,6 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
       return -1;
    }
 #endif
-
-  status = connect(*s, (struct sockaddr*)&soc_address, sizeof(soc_address));
 
   if(status < 0)	{
 	NETCLOSE(*s);
