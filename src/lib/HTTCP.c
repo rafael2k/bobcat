@@ -418,18 +418,18 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
     sleep(2);
 
 #ifdef __ELKS__
+#if 0
   if (bind(*sockfd, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr)) < 0)
   {
+      _HTProgress ("Failure in bind");
+      sleep(2);
       return -1;
   }
-
+#endif
   struct linger l;
   l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
   l.l_linger = 0;	/* must be 0 to turn on option*/
-  setsockopt(*s, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
-
-  if (!sin->sin_addr.s_addr)
-      return -1;
+  setsockopt(*sockfd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
 
   status = in_connect(*sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr), 10);
 #else
@@ -477,9 +477,11 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
       sleep(2);
       NETCLOSE(*s);
   }
-
-  _HTProgress ("connect() successfull!");
-  sleep(2);
+  else
+  {
+      _HTProgress ("Successfull connect()!");
+      sleep(2);
+  }
 
   return status;
 }
