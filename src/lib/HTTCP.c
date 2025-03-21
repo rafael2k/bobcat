@@ -334,24 +334,10 @@ PUBLIC char * HTHostName()
     return hostname;
 }
 
-/* if errflag set, send TCP RST on close, else send FIN */
-void net_close(int fd)
-{
-	/* Send RST on close was previously turned on by net_connect*/
-    struct linger l;
-
-    l.l_onoff = 0;	/* turn off linger option: will send FIN on close*/
-    l.l_linger = 0;
-    setsockopt(fd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
-
-    close(fd);
-}
-
 int net_connect(char *host, int port)
 {
 	int netfd, e;
 	struct sockaddr_in in_adr;
-	struct linger l;
 	
 	netfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (netfd < 0)
@@ -364,10 +350,6 @@ int net_connect(char *host, int port)
 	if (bind(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr_in)) < 0)
 		goto error;
 	
-	l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
-	l.l_linger = 0;	/* must be 0 to turn on option*/
-	setsockopt(netfd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
-
 	in_adr.sin_family = AF_INET;
 	in_adr.sin_port = htons(port);
 	in_adr.sin_addr.s_addr = in_gethostbyname(host);

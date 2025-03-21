@@ -51,8 +51,7 @@ Default values
  */
 /* Default values of those: */
 /* Default values of those: */
-extern void net_close(int fd);
-#define NETCLOSE net_close      /* Routine to close a TCP-IP socket         */
+#define NETCLOSE close      /* Routine to close a TCP-IP socket         */
 #define NETREAD  read       /* Routine to read from a TCP-IP socket     */
 #define NETWRITE write      /* Routine to write to a TCP-IP socket      */
 #define SOCKET_READ read    /* normal socket read routine */
