@@ -382,27 +382,6 @@ PUBLIC char * HTHostName()
     return hostname;
 }
 
-#ifdef __ELKS__
-
-int parse_ip(const char *ip_str, struct in_addr *addr) {
-    unsigned char bytes[4];
-    if (sscanf(ip_str, "%hhu.%hhu.%hhu.%hhu", &bytes[3], &bytes[2], &bytes[1], &bytes[0]) != 4) {
-        return -1;
-    }
-
-    // Usar unsigned long para garantir 32 bits
-    uint32_t ip = ((uint32_t)bytes[0] << 24) |
-        ((uint32_t)bytes[1] << 16) |
-        ((uint32_t)bytes[2] << 8)  |
-        (uint32_t)bytes[3];
-
-    // Atribuir o valor ao struct in_addr
-    addr->s_addr = ip;
-    // addr->s_addr = htonl((uint32_t)ip); // Garantir ordem de rede (big-endian)
-    return 0;
-}
-#endif
-
 PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 								     int *,s)
 {
@@ -428,11 +407,7 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
     server_addr.sin_family = AF_INET;           // IPv4
     server_addr.sin_port = htons(port);
 
-#ifdef __ELKS__
-    if (parse_ip(server_ip, &server_addr.sin_addr) < 0) {
-#else
-    if (inet_aton(server_ip, &server_addr.sin_addr) <= 0) {
-#endif
+    if (server_addr.sin_addr.s_addr = inet_addr(server_ip) <= 0) {
         fprintf(stderr, "inet_str_to_addr error\n");
         close(*sockfd);
         return -1;
