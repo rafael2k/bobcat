@@ -545,18 +545,17 @@ redraw:
     for(i = 0; i <= num_options; i++, opt_ptr = opt_ptr->next) {
         if(i >= window_offset && i - window_offset < length) {
 #ifdef GOODCURSES
-		wmove(form_window,(i+1)-window_offset,2);
+            wmove(form_window,(i+1)-window_offset,2);
 	    wclrtoeol(form_window);
-#else
-		clrtoeol();
 #endif
-		waddstr(form_window,opt_ptr->name);
+            waddstr(form_window,opt_ptr->name);
 	}
     }
     box(form_window, BOXVERT, BOXHORI);
     wrefresh(form_window);
     opt_ptr=NULL;
 
+    
     /* loop on user input */
     while(cmd != LYK_ACTIVATE) {
 
@@ -565,7 +564,7 @@ redraw:
 #ifdef GOODCURSES
 	    wmove(form_window,(i+1)-window_offset,2);
 #endif
-		waddstr(form_window,opt_ptr->name);
+            waddstr(form_window,opt_ptr->name);
 	}
 
         opt_ptr=list;
@@ -575,11 +574,11 @@ redraw:
 
         wstart_reverse(form_window);
 #ifdef GOODCURSES
-		wmove(form_window,(i+1)-window_offset,2);
+        wmove(form_window,(i+1)-window_offset,2);
 #endif
         waddstr(form_window,opt_ptr->name);
 #ifdef GOODCURSES
-		wmove(form_window,(i+1)-window_offset,2);
+        wmove(form_window,(i+1)-window_offset,2);
 #endif
         wstop_reverse(form_window);
         wrefresh(form_window);
@@ -600,10 +599,10 @@ new_cmd:  /* jump here to skip user */
 		if(cur_selection-window_offset < 0) {
 #ifdef GOODCURSES
 		    wmove(form_window,1,2);
-#endif
 		    winsertln(form_window);
 		    box(form_window, BOXVERT, BOXHORI);
-		    window_offset--;
+#endif
+                    window_offset--;
 		}
                 break;
             case LYK_NEXT_LINK:
@@ -618,11 +617,9 @@ new_cmd:  /* jump here to skip user */
 		    wmove(form_window,length+1,1);
 		    wclrtoeol(form_window);
 		    scroll(form_window);
-#else
-		    clrtoeol();
+                    box(form_window, BOXVERT, BOXHORI);
 #endif
-			box(form_window, BOXVERT, BOXHORI);
-		    window_offset++;
+                    window_offset++;
 		}
                 break;
 
@@ -712,6 +709,7 @@ new_cmd:  /* jump here to skip user */
         }
 
     }
+    
 #ifdef GOODCURSES
     delwin(form_window);
 #endif
