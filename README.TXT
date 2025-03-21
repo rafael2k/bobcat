@@ -2,6 +2,11 @@
    run "make -f Makefile.elks" from inside "src" directory. For Linux, use
    the "Makefile" to compile.
 
+   In order to have more free ram in ELKS, to run bobcat I enable network,
+   but disable ftpd and httpd, and add this to /bootops:
+
+   task=12 buf=8 cache=4 file=12 inode=16 heap=24000
+
    Binary releases are available in "Releases" page.
 
    Follows the original README.
