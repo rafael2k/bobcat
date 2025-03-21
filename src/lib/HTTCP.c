@@ -266,6 +266,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 {
     char *port;
     char host[256];
+    char line[54];
     struct hostent  *phost;	/* Pointer to host - See netdb.h */
     strcpy(host, str);		/* Take a copy we can mutilate */
 
@@ -273,52 +274,36 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 
 /*	Parse port number if present
 */    
-    if (port=strchr(host, ':')) {
+    sprintf (line, "host %s.", host);
+    _HTProgress (line);
+    sleep(2);
+    if (port=strchr(host, ':'))
+    {
+        sprintf (line, "Port %s.", port);
+        _HTProgress (line);
     	*port++ = 0;		/* Chop off port */
         if (port[0]>='0' && port[0]<='9') {
-
-#ifdef unix
 	    sin->sin_port = htons(atol(port));
-#else /* VMS */
-#ifdef DECNET
-	    sin->sdn_objnum = (unsigned char) (strtol(port, (char**)0 , 10));
-#else
-	    sin->sin_port = htons(strtol(port, (char**)0 , 10));
-#endif /* Decnet */
-#endif /* Unix vs. VMS */
-
-	} else {
-
-#ifdef SUPPRESS		/* 1. crashes!?!.  2. Not recommended */
-	    struct servent * serv = getservbyname(port, (char*)0);
-	    if (serv) sin->sin_port = serv->s_port;
-#ifndef DT
-	    else if (TRACE) fprintf(stderr, "TCP: Unknown service %s\n", port);
-#endif /* DT */
-#endif
+            sprintf (line, "Port %u.", sin->sin_port);
+            _HTProgress (line);
+            sleep(2);
 	}
-      }
+    }
 
-#ifdef DECNET
-    /* read Decnet node name. @@ Should know about DECnet addresses, but it's
-       probably worth waiting until the Phase transition from IV to V. */
-
-    sin->sdn_nam.n_len = min(DN_MAXNAML, strlen(host));  /* <=6 in phase 4 */
-    strncpy (sin->sdn_nam.n_name, host, sin->sdn_nam.n_len + 1);
-
-#ifndef DT
-    if (TRACE) fprintf(stderr,
-	"DECnet: Parsed address as object number %d on host %.6s...\n",
-		      sin->sdn_objnum, host);
-#endif /* DT */
-
-#else  /* parse Internet host */
 
 /*	Parse host number if present.
 */  
+#if 0 
+    while(*host != '/' && *host != 0)
+        host++;
+    if *host == 0;
+#endif
     if (*host>='0' && *host<='9') {   /* Numeric node address: */
 	sin->sin_addr.s_addr = inet_addr(host); /* See arpa/inet.h */
-
+        sprintf (line, "addr: %u.", sin->sin_addr.s_addr);
+        _HTProgress (line);
+        sleep(1);
+        
     } else {		    /* Alphanumeric node name: */
         _HTProgress ("DNS not supported yet");
 #ifndef __ELKS__
@@ -330,16 +315,6 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 #endif
     }
 
-#ifndef DT
-    if (TRACE) fprintf(stderr,
-	"TCP: Parsed address as port %d, IP address %d.%d.%d.%d\n",
-		(int)ntohs(sin->sin_port),
-		(int)*((unsigned char *)(&sin->sin_addr)+0),
-		(int)*((unsigned char *)(&sin->sin_addr)+1),
-		(int)*((unsigned char *)(&sin->sin_addr)+2),
-		(int)*((unsigned char *)(&sin->sin_addr)+3));
-#endif /* DT */
-#endif  /* Internet vs. Decnet */
 
     return 0;	/* OK */
 }
@@ -407,54 +382,71 @@ PUBLIC char * HTHostName()
     return hostname;
 }
 
+#ifdef __ELKS__
+
+int parse_ip(const char *ip_str, struct in_addr *addr) {
+    unsigned char bytes[4];
+    if (sscanf(ip_str, "%hhu.%hhu.%hhu.%hhu", &bytes[3], &bytes[2], &bytes[1], &bytes[0]) != 4) {
+        return -1;
+    }
+
+    // Usar unsigned long para garantir 32 bits
+    uint32_t ip = ((uint32_t)bytes[0] << 24) |
+        ((uint32_t)bytes[1] << 16) |
+        ((uint32_t)bytes[2] << 8)  |
+        (uint32_t)bytes[3];
+
+    // Atribuir o valor ao struct in_addr
+    addr->s_addr = ip;
+    // addr->s_addr = htonl((uint32_t)ip); // Garantir ordem de rede (big-endian)
+    return 0;
+}
+#endif
 
 PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 								     int *,s)
 {
-  struct sockaddr_in soc_address;
-  struct sockaddr_in *sin = &soc_address;
-  int status;
-
-  /* Set up defaults: */
-  sin->sin_family = AF_INET;
-  sin->sin_port = htons(default_port);
-  
-  /* Get node name and optional port number: */
-  {
-    char line[256];
-    char *p1 = HTParse(url, "", PARSE_HOST);
-    char *at_sign, *host;
+    char line[64];
+    struct sockaddr_in server_addr;
+    struct sockaddr_in *sin = &server_addr;
     int status;
 
-    /* if theres an @ then use the stuff after it as a hostname */
-    if((at_sign = strchr(p1,'@')) != NULL)
-	host = at_sign+1;
-    else
-	host = p1;
+    const char *server_ip = HTParse(url, "", PARSE_HOST); // TODO: no DNS yet 
+    const int port = default_port;
 
-    sprintf (line, "Looking up %s.", host);
-    _HTProgress (line);
-
-    status = HTParseInet(sin, host);
-    if (status)
-    {
-        sprintf (line, "Unable to locate remote host %s.", host);
-        _HTProgress(line);
-	free (p1);
-	return -1;
+    int *sockfd = s;
+  
+    // Create a socket
+    *sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (*sockfd < 0) {
+        fprintf(stderr, "socket\n");
+        return -1;
     }
-    sprintf (line, "Making %s connection to %s.", protocol, host);
+
+    // Set up the server address structure
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;           // IPv4
+    server_addr.sin_port = htons(port);
+
+#ifdef __ELKS__
+    if (parse_ip(server_ip, &server_addr.sin_addr) < 0) {
+#else
+    if (inet_aton(server_ip, &server_addr.sin_addr) <= 0) {
+#endif
+        fprintf(stderr, "inet_str_to_addr error\n");
+        close(*sockfd);
+        return -1;
+    }
+    
+    sprintf (line, "Making %s connection to %s.", protocol, server_ip);
     _HTProgress (line);
-    free (p1);
+    sleep(2);
+
+#ifdef __ELKS__
+  if (bind(*sockfd, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr)) < 0)
+  {
+      return -1;
   }
-
-  /* Now, let's get a socket set up from the server for the data: */
-  *s = socket(AF_INET, SOCK_STREAM, 0);
-  if (*s < 0)
-      return -1;
-
-  if (bind(*s, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr_in)) < 0)
-      return -1;
 
   struct linger l;
   l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
@@ -464,14 +456,32 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
   if (!sin->sin_addr.s_addr)
       return -1;
 
-  status = in_connect(*s, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr_in), 10);
+  status = in_connect(*sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr), 10);
+#else
+  status = connect(*sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+#endif
 
-  
   /*
    * Issue the connect.  Since the server can't do an instantaneous accept
    * and we are non-blocking, this will almost certainly return a negative
    * status.
    */
+
+
+#if 0
+  sprintf(line,
+	"TCP: p %d, IP %d.%d.%d.%d",
+		(int)ntohs(sin->sin_port),
+		(int)*((unsigned char *)(&sin->sin_addr)+0),
+		(int)*((unsigned char *)(&sin->sin_addr)+1),
+		(int)*((unsigned char *)(&sin->sin_addr)+2),
+		(int)*((unsigned char *)(&sin->sin_addr)+3));
+  _HTProgress (line);
+  sleep(1);
+
+  
+#endif
+
 #if 0
    if(HTCheckForInterrupt())
    {
@@ -486,9 +496,15 @@ PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
    }
 #endif
 
+   
   if(status < 0)	{
-	NETCLOSE(*s);
+      _HTProgress ("Error in connect()");
+      sleep(2);
+      NETCLOSE(*s);
   }
+
+  _HTProgress ("connect() successfull!");
+  sleep(2);
 
   return status;
 }
