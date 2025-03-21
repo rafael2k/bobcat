@@ -28,47 +28,6 @@
 
 #define NeXT
 
-#if 0
-uint32_t aton( char *text )
-{
-    char *p;
-    int i, cur;
-    uint32_t ip;
-
-    ip = 0;
-
-    if ( *text == '[' )
-	++text;
-    for ( i = 24; i >= 0; i -= 8 ) {
-	cur = atoi( text );
-	ip |= (uint32_t)(cur & 0xff) << i;
-	if (!i) return( ip );
-
-	if (!(text = strchr( text, '.')))
-	    return( 0 );	/* return 0 on error */
-	++text;
-	}
-}
-#endif
-
-uint16_t isaddr( char *text )
-{
-    char ch;
-    while ( ch = *text++ ) {
-	if ( isdigit(ch) ) continue;
-	if ( ch == '.' || ch == ' ' || ch == '[' || ch == ']' )
-	    continue;
-	return( 0 );
-    }
-    return( 1 );
-}
-
-#ifdef __ELKS__
-uint32_t inet_addr( char *s )
-{
-    return( isaddr( s ) ? in_aton( s ) : 0 );
-}
-#endif
 
 #ifdef SHORT_NAMES
 #define HTInetStatus		HTInStat
@@ -250,6 +209,7 @@ PUBLIC CONST char * HTInetString ARGS1(SockA*,sin)
 #endif /* Decnet */
 
 
+#if 0
 /*	Parse a network node address and port
 **	-------------------------------------
 **
@@ -274,9 +234,6 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 
 /*	Parse port number if present
 */    
-    sprintf (line, "host %s.", host);
-    _HTProgress (line);
-    sleep(2);
     if (port=strchr(host, ':'))
     {
         sprintf (line, "Port %s.", port);
@@ -284,9 +241,6 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
     	*port++ = 0;		/* Chop off port */
         if (port[0]>='0' && port[0]<='9') {
 	    sin->sin_port = htons(atol(port));
-            sprintf (line, "Port %u.", sin->sin_port);
-            _HTProgress (line);
-            sleep(2);
 	}
     }
 
@@ -301,8 +255,6 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
     if (*host>='0' && *host<='9') {   /* Numeric node address: */
 	sin->sin_addr.s_addr = inet_addr(host); /* See arpa/inet.h */
         sprintf (line, "addr: %u.", sin->sin_addr.s_addr);
-        _HTProgress (line);
-        sleep(1);
         
     } else {		    /* Alphanumeric node name: */
         _HTProgress ("DNS not supported yet");
@@ -318,7 +270,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 
     return 0;	/* OK */
 }
-
+#endif
 
 /*	Derive the name of the host on which we are
 **	-------------------------------------------
@@ -382,106 +334,65 @@ PUBLIC char * HTHostName()
     return hostname;
 }
 
+/* if errflag set, send TCP RST on close, else send FIN */
+void net_close(int fd)
+{
+	/* Send RST on close was previously turned on by net_connect*/
+    struct linger l;
+
+    l.l_onoff = 0;	/* turn off linger option: will send FIN on close*/
+    l.l_linger = 0;
+    setsockopt(fd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
+
+    close(fd);
+}
+
+int net_connect(char *host, int port)
+{
+	int netfd, e;
+	struct sockaddr_in in_adr;
+	struct linger l;
+	
+	netfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (netfd < 0)
+		return -1;
+	
+	in_adr.sin_family = AF_INET;
+	in_adr.sin_port = PORT_ANY;
+	in_adr.sin_addr.s_addr = INADDR_ANY;
+
+	if (bind(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr_in)) < 0)
+		goto error;
+	
+	l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
+	l.l_linger = 0;	/* must be 0 to turn on option*/
+	setsockopt(netfd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
+
+	in_adr.sin_family = AF_INET;
+	in_adr.sin_port = htons(port);
+	in_adr.sin_addr.s_addr = in_gethostbyname(host);
+	if (!in_adr.sin_addr.s_addr)
+		goto error;
+
+	if (in_connect(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr_in), 10) < 0)
+		goto error;
+
+	return netfd;
+error:
+	e = errno;
+	close(netfd);
+	errno = e;
+	return -1;
+}
+
 PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 								     int *,s)
 {
-    char line[64];
-    struct sockaddr_in server_addr;
-    struct sockaddr_in *sin = &server_addr;
-    int status;
+    char *server_ip = HTParse(url, "", PARSE_HOST); // TODO: no DNS yet 
+    *s = net_connect(server_ip, default_port);
 
-    const char *server_ip = HTParse(url, "", PARSE_HOST); // TODO: no DNS yet 
-    const int port = default_port;
-
-    int *sockfd = s;
-  
-    // Create a socket
-    *sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (*sockfd < 0) {
-        fprintf(stderr, "socket\n");
+    if (*s < 0)
         return -1;
-    }
-
-    // Set up the server address structure
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;           // IPv4
-    server_addr.sin_port = htons(port);
-
-    if (server_addr.sin_addr.s_addr = inet_addr(server_ip) <= 0) {
-        fprintf(stderr, "inet_str_to_addr error\n");
-        close(*sockfd);
-        return -1;
-    }
-    
-    sprintf (line, "Making %s connection to %s.", protocol, server_ip);
-    _HTProgress (line);
-    sleep(2);
-
-#ifdef __ELKS__
-#if 0
-  if (bind(*sockfd, (struct sockaddr *)&sin->sin_addr, sizeof(struct sockaddr)) < 0)
-  {
-      _HTProgress ("Failure in bind");
-      sleep(2);
-      return -1;
-  }
-#endif
-  struct linger l;
-  l.l_onoff = 1;	/* turn on linger option: will send RST on close*/
-  l.l_linger = 0;	/* must be 0 to turn on option*/
-  setsockopt(*sockfd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
-
-  status = in_connect(*sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr), 10);
-#else
-  status = connect(*sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
-#endif
-
-  /*
-   * Issue the connect.  Since the server can't do an instantaneous accept
-   * and we are non-blocking, this will almost certainly return a negative
-   * status.
-   */
-
-
-#if 0
-  sprintf(line,
-	"TCP: p %d, IP %d.%d.%d.%d",
-		(int)ntohs(sin->sin_port),
-		(int)*((unsigned char *)(&sin->sin_addr)+0),
-		(int)*((unsigned char *)(&sin->sin_addr)+1),
-		(int)*((unsigned char *)(&sin->sin_addr)+2),
-		(int)*((unsigned char *)(&sin->sin_addr)+3));
-  _HTProgress (line);
-  sleep(1);
-
-  
-#endif
-
-#if 0
-   if(HTCheckForInterrupt())
-   {
-#ifdef DL
-      if (TRACE)
-	fprintf (stderr, "*** INTERRUPTED in middle of connect.\n");
-#endif
-      status = HT_INTERRUPTED;
-      SOCKET_ERRNO = EINTR;
-
-      return -1;
-   }
-#endif
-
-   
-  if(status < 0)	{
-      _HTProgress ("Error in connect()");
-      sleep(2);
-      NETCLOSE(*s);
-  }
-  else
-  {
-      _HTProgress ("Successfull connect()!");
-      sleep(2);
-  }
-
-  return status;
+    else
+        return 0;
 }

@@ -102,6 +102,9 @@ extern unsigned int HTCardinal PARAMS((int *pstatus,
 
 extern CONST char * HTHostName NOPARAMS;
 
+extern void net_close(int fd);
+extern int net_connect(char *host, int port);
+
 #endif   /* HTTCP_H */
 /*
 
