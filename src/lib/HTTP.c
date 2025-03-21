@@ -527,14 +527,12 @@ PUBLIC int HTLoadHTTP ARGS4 (
               }
           }
 
-        
+#if 0        
         bytes_already_read += status;
-        {
-          char line[256];
-	  sprintf (line, "Read %ld bytes of data.", bytes_already_read);
-          HTProgress (line);
-        }
-
+        char line[40];
+        sprintf (line, "Read %ld bytes of data.", bytes_already_read);
+        HTProgress (line);
+#endif
         
 #ifdef UCX  /* UCX returns -1 on EOF */
         if (status == 0 || status == -1) 

@@ -591,7 +591,7 @@ PUBLIC int HTCopy ARGS2(
         HTProgress(line);
     } /* next bufferload */
 
-    // _HTProgress("Data transfer complete");
+    _HTProgress("Data transfer complete");
     NETCLOSE(file_number);
     rv = HT_LOADED;
 
