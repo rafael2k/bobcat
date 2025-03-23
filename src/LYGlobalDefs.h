@@ -15,10 +15,6 @@
 #include "LYStruct.h"
 #endif /* LYSTRUCTS_H */
 
-#ifndef LYCOPYRIGHT_H
-#include "LYCopyRi.h"
-#endif /* LYCOPYRIGHT_H */
-
 extern char *TEMP_SPACE;
 
 #define NUMBERS_AS_ARROWS 0

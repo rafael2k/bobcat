@@ -74,13 +74,17 @@ PRIVATE void syntax_error ARGS3(FILE *,	 fp,
 				char *,	 msg,
 				LexItem, lex_item)
 {
-    char buffer[41];
-    int cnt = 0;
     char ch;
 
+    while ((ch = getc(fp)) != EOF  &&  ch != '\n');
+
+#ifdef SAVE_DATA
+    int cnt = 0;
+    char buffer[41];
     while ((ch = getc(fp)) != EOF  &&  ch != '\n')
-	if (cnt < 40) buffer[cnt++] = ch;
+        if (cnt < 40) buffer[cnt++] = ch;
     buffer[cnt] = (char)0;
+#endif
 
 #ifdef DT
     if (TRACE)
@@ -443,17 +447,6 @@ PUBLIC void HTAA_printGroupDef ARGS1(GroupDef *, group_def)
     print_item_list(group_def->item_list);
     fprintf(stderr, "\n");
 }
-
-
-PRIVATE void print_group_def_list ARGS1(GroupDefList *, group_list)
-{
-    GroupDefList *cur = group_list;
-    GroupDef *group_def;
-    
-    while (NULL != (group_def = (GroupDef*)HTList_nextObject(cur)))
-	HTAA_printGroupDef(group_def);
-}
-
 
 
 /*

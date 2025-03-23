@@ -197,7 +197,7 @@ static void free_suffixes NOARGS	{
 **
 **  If a README file exists, then it is inserted into the document here.
 */
-
+#ifdef FIXME
 #ifdef GOT_READ_DIR
 PRIVATE void do_readme ARGS2(HTStructured *, target, CONST char *, localname)
 { 
@@ -243,7 +243,6 @@ Bug removed thanks to joe@athena.mit.edu */
 #endif /* GOT_READ_DIR */
 
 
-#ifdef FIXME
 /*	Make the cache file name for a W3 document
 **	------------------------------------------
 **	Make up a suitable name for saving the node in

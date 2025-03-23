@@ -6,7 +6,7 @@ CLBASE = -std=gnu99
 WARNINGS = -Wall
 #INCLUDES += -I$(TOPDIR)/libc/include/watcom
 INCLUDES += -Ilib -Icurses -I.
-DEFINES = -Dunix
+DEFINES = -Dunix -Wunreachable-code
 CFLAGS = -O0 -g $(CLBASE) $(WARNINGS) $(INCLUDES) $(DEFINES) $(LOCALFLAGS)
 LDBASE =
 #LDBASE += -Wl,option -Wl,dosseg
