@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-
+#include <netdb.h>
 
 
 #define NeXT
@@ -342,24 +342,38 @@ int net_connect(char *host, int port)
 	netfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (netfd < 0)
 		return -1;
-	
-	in_adr.sin_family = AF_INET;
+
+        in_adr.sin_family = AF_INET;
+
+#ifdef __ELKS__
 	in_adr.sin_port = PORT_ANY;
 	in_adr.sin_addr.s_addr = INADDR_ANY;
 
 	if (bind(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr_in)) < 0)
 		goto error;
-	
-	in_adr.sin_family = AF_INET;
-	in_adr.sin_port = htons(port);
+
+        in_adr.sin_port = htons(port);
 	in_adr.sin_addr.s_addr = in_gethostbyname(host);
+
 	if (!in_adr.sin_addr.s_addr)
 		goto error;
-
+        
 	if (in_connect(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr_in), 10) < 0)
-		goto error;
+            goto error;
+#else
+        in_adr.sin_port = htons(port);
 
+        struct hostent *server = gethostbyname(host);
+        if (server == NULL) {
+            goto error;
+        }
+        memcpy(&in_adr.sin_addr.s_addr, server->h_addr, sizeof(server->h_addr));
+
+	if (connect(netfd, (struct sockaddr *)&in_adr, sizeof(struct sockaddr)) < 0)
+		goto error;        
+#endif
 	return netfd;
+
 error:
 	e = errno;
 	close(netfd);
