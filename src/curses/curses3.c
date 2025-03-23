@@ -14,22 +14,18 @@
 /* just to fill the gap for ELKS */
 int strnicmp(const char *s1, const char *s2, int n) {
     for (size_t i = 0; i < n; i++) {
-        // Converte ambos os caracteres para minúsculas antes de comparar
         char c1 = tolower((unsigned char)s1[i]);
         char c2 = tolower((unsigned char)s2[i]);
 
-        // Se os caracteres forem diferentes, retorna a diferença
         if (c1 != c2) {
             return (int)(c1 - c2);
         }
 
-        // Se chegarmos ao final de uma das strings, retorna a diferença
         if (s1[i] == '\0' || s2[i] == '\0') {
             break;
         }
     }
 
-    // Se chegamos aqui, as strings são iguais até o limite de 'n' caracteres
     return 0;
 }
 
