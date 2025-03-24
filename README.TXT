@@ -3,7 +3,8 @@
    the "Makefile" to compile.
 
    In order to have more free ram in ELKS, to run bobcat I enable network,
-   but disable ftpd and httpd, and add this to /bootops:
+   but disable ftpd and httpd (comment the line enabling the daemons in /etc/net.cfg), 
+   and add this to /bootops:
 
    task=12 buf=8 cache=4 file=12 inode=16 heap=24000
 
