@@ -36,7 +36,10 @@
 #define MAIL      3
 #define PRINTER   4
 
+// #ifdef __ELKS__
+#if 0
 PRIVATE int remove_quotes PARAMS((char *string));
+#endif
 
 PUBLIC int printfile ARGS1(document *,newdoc) 
 {
@@ -409,6 +412,8 @@ PUBLIC int printfile ARGS1(document *,newdoc)
      return(NORMAL);
 }	
 
+// #ifdef __ELKS__
+#if 0
 PRIVATE int remove_quotes ARGS1(char *,string)
 {
    int i;
@@ -423,6 +428,7 @@ PRIVATE int remove_quotes ARGS1(char *,string)
 
    return(0);
 }
+#endif
 
 /*
  * print_options writes out the current printer choices to a file

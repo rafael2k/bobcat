@@ -384,7 +384,7 @@ error:
 PUBLIC int HTDoConnect ARGS4(char *,url, char *,protocol, int,default_port,
 								     int *,s)
 {
-    char *server_ip = HTParse(url, "", PARSE_HOST); // TODO: no DNS yet 
+    char *server_ip = HTParse(url, "", PARSE_HOST);
     *s = net_connect(server_ip, default_port);
 
     if (*s < 0)

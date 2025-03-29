@@ -87,7 +87,8 @@ PRIVATE HTChildAnchor * HTChildAnchor_new
 **	returns	YES if the strings are equivalent ignoring case
 **		NO if they differ in more than  their case.
 */
-
+// #ifdef __ELKS__
+#if 0
 PRIVATE BOOL equivalent
   ARGS2 (CONST char *,s, CONST char *,t)
 {
@@ -100,7 +101,7 @@ PRIVATE BOOL equivalent
   } else
     return s == t;  /* Two NULLs are equivalent, aren't they ? */
 }
-
+#endif
 
 /*	Case sensitive string comparison
 **	----------------------------------
