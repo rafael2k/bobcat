@@ -19,7 +19,16 @@ int LINES = 25;
 int COLS = 80;
 void *stdscr;
 
-//static int xoff, yoff;
+/* Track current cursor position for getyx() */
+int cur_y = 0;
+int cur_x = 0;
+
+/* Get current cursor position */
+void getyx_impl(int *y, int *x)
+{
+    if (y) *y = cur_y;
+    if (x) *x = cur_x;
+}
 
 void *initscr()
 {
@@ -79,13 +88,15 @@ void curs_set(int visibility)
 /* clear screen */
 void erase()
 {
+    cur_y = 0;
+    cur_x = 0;
     printf("\033[H\033[2J");
 }
 
 void move(int y, int x)
 {
-    //y += yoff;
-    //x += xoff;
+    cur_y = y;
+    cur_x = x;
     printf("\033[%d;%dH", y+1, x+1);
 }
 

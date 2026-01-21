@@ -143,8 +143,8 @@ void wbkgdset(WINDOW *w, int a);
 void mvprintw(int y, int x, const char *fmt, ...);
 
 
-#define getyx(win, y, x) { \
-	tty_getsize(&x, &y); \
-}
+/* Get current cursor position (tracked internally) */
+void getyx_impl(int *y, int *x);
+#define getyx(win, y, x) getyx_impl(&(y), &(x))
 
 #endif
