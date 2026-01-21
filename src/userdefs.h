@@ -39,7 +39,7 @@
  * that are established as defaults in src/HTInit.c.
  *
  */
-#define LYNX_CFG_FILE "lynx.cfg"
+#define LYNX_CFG_FILE "/etc/lynx.cfg"
 
 /**************************
  * The EXTENSION_MAP file allows you to map file suffix's to 
