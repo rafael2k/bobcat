@@ -109,9 +109,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	  else 
 	     stop_bold();
 
-	  addch('\n');
-	  for(i=0; i < links[cur].hightext2_offset; i++)
-	 	addch(' ');
+	  /* Use explicit move instead of newline to avoid scrolling */
+	  move(links[cur].ly + 1, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
