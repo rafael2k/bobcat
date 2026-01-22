@@ -59,16 +59,27 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 {
     char buffer[200];
     int i;
+    int saved_ly, saved_lx;  /* Save original cursor position */
 
     /* Bug in history code can cause -1 to be sent, which will yield
     ** an ACCVIO when LYstrncpy() is called with a nonsense pointer.
     ** This works around the bug, for now. -- FM
     */
-    if (cur < 0)
-        cur = 0;
+    if (cur < 0 || cur >= nlinks)
+        return;
 
-    if (nlinks > 0) {
-	move(links[cur].ly, links[cur].lx);
+    if (nlinks > 0 && links[cur].ly >= 0 && links[cur].lx >= 0) {
+	/* Save current cursor position to restore later */
+	saved_ly = links[cur].ly;
+	saved_lx = links[cur].lx;
+	
+	/* Ensure we're within screen bounds */
+	if (saved_ly >= display_lines || saved_ly < 0)
+	    return;
+	if (saved_lx >= LYcols || saved_lx < 0)
+	    return;
+
+	move(saved_ly, saved_lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -83,7 +94,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 
       if(links[cur].type == WWW_FORM_LINK_TYPE) {
 	int len;
-	int avail_space = (LYcols-links[cur].lx)-1;
+	int avail_space = (LYcols-saved_lx)-1;
+	if (avail_space < 0) avail_space = 0;
 
         LYstrncpy(buffer,links[cur].hightext, 
 			(avail_space > links[cur].form->size ? 
@@ -99,19 +111,27 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
            /* copy into the buffer only what will fit within the
 	    * width of the screen
 	    */
-	  LYstrncpy(buffer,links[cur].hightext, LYcols-links[cur].lx-1);
-          addstr(buffer);  
+	  int max_copy = LYcols-saved_lx-1;
+	  if (max_copy > 0) {
+	      LYstrncpy(buffer,links[cur].hightext, max_copy);
+	      buffer[max_copy] = '\0';  /* Ensure null termination */
+	      addstr(buffer);  
+	  }
       }
 
       /* display a second line as well */
-      if(links[cur].hightext2 && links[cur].ly < display_lines) {
+      if(links[cur].hightext2 && saved_ly + 1 < display_lines) {
 	  if (flag == ON)
 	     stop_reverse();
 	  else 
 	     stop_bold();
 
 	  /* Use explicit move instead of newline to avoid scrolling */
-	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  int h2_offset = links[cur].hightext2_offset;
+	  if (h2_offset < 0) h2_offset = 0;
+	  if (h2_offset >= LYcols) h2_offset = LYcols - 1;
+	  
+	  move(saved_ly + 1, h2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
@@ -119,7 +139,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	     start_bold();
 
 	  for(i=0; links[cur].hightext2[i] != '\0' &&
-			i+links[cur].hightext2_offset < LYcols; i++)
+			i+h2_offset < LYcols; i++)
 	      if(!IsSpecialAttrChar(links[cur].hightext2[i]))
 	           addch((unsigned char)links[cur].hightext2[i]);
       }
@@ -128,6 +148,13 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
           stop_reverse();
       else
           stop_bold();
+
+      /* Restore cursor to proper position - ensure status line stays put */
+      if(user_mode == NOVICE_MODE) {
+          move(LYlines-3, 0);  /* Status line position for novice mode */
+      } else {
+          move(LYlines-1, 0);  /* Status line position for advanced mode */
+      }
 
 #ifdef FANCY_CURSES
       if(!LYShowCursor)
@@ -138,7 +165,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       {
 #endif /* FANCY CURSES */
 	  /* never hide the cursor if there's no FANCY CURSES */
-	  move(links[cur].ly, links[cur].lx - 1);
+	  move(saved_ly, saved_lx);
       // }
 
       if(flag)
@@ -230,6 +257,7 @@ PUBLIC void statusline ARGS1(char *,text)
     char buffer[256];
     extern BOOLEAN no_statusline;
     int max_length;
+    int status_line_y;  /* Fixed status line position */
 
     if(!text || text==NULL)
 	return;
@@ -252,19 +280,29 @@ PUBLIC void statusline ARGS1(char *,text)
     convert_to_spaces(buffer);
 
     /* make sure text is not longer than the statusline window */
-    max_length = ((LYcols - 2) < 256) ? (LYcols - 2) : 255;
+    max_length = ((LYcols - 2) < 255) ? (LYcols - 2) : 255;
     buffer[max_length] = '\0';
 
+    /* Always use fixed position for status line to prevent "going up" */
     if(user_mode == NOVICE_MODE)
-        move(LYlines-3,0);
+        status_line_y = LYlines-3;
     else
-        move(LYlines-1,0);
+        status_line_y = LYlines-1;
+    
+    /* Ensure status line is within bounds */
+    if (status_line_y < 0) status_line_y = 0;
+    if (status_line_y >= LYlines) status_line_y = LYlines - 1;
+    
+    move(status_line_y, 0);
     clrtoeol();
     if (text != NULL) {
 	start_reverse();
 	addstr(buffer);
 	stop_reverse();
     }
+    
+    /* Ensure cursor is positioned correctly after status line update */
+    move(status_line_y, strlen(buffer) < LYcols ? strlen(buffer) : LYcols - 1);
 
     refresh();
     return;

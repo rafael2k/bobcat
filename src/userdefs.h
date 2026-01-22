@@ -174,8 +174,10 @@
 * This so-called cache size (actually, number) may be modified with the
 * command line argument -cache=NUMBER
 *
+* Set to 1 for memory-constrained systems to keep only current document.
+*
 */
-#define DEFAULT_CACHE_SIZE 3
+#define DEFAULT_CACHE_SIZE 1
 
 /*****************************
  * PREFERRED_LANGUAGE is the language in MIME notation (e.g., "en",

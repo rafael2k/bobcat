@@ -915,7 +915,7 @@ PRIVATE void parse_arg ARGS3(char **, argv, int *, i, int, argc)
 	}
 	
 	/* limit size */
-	if(HTCacheSize < 2) HTCacheSize = 2;
+	if(HTCacheSize < 1) HTCacheSize = 1;  /* Allow cache size of 1 for memory-constrained systems */
 	
     } else if(strncmp(argv[0], "-vikeys", 7) == 0) {
 	vi_keys = TRUE;
