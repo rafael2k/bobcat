@@ -71,8 +71,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	/* Reset all attributes first to clear any previous formatting */
 	attroff(-1);
 	
-	/* Adjust ly: first link (ly=0) is correct, but subsequent links need -1 */
-	int adjusted_ly = (links[cur].ly == 0) ? links[cur].ly : links[cur].ly - 1;
+	/* For links after the first, they appear one line too low, so subtract 1 */
+	int adjusted_ly = (cur == 0) ? links[cur].ly : links[cur].ly - 1;
 	
 	/* Clear and redraw the first line */
 	move(adjusted_ly, links[cur].lx);
