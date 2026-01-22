@@ -74,15 +74,11 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	/* Adjust: first link (cur=0, ly=0) is correct, others need -1 */
 	int adjusted_ly = (cur == 0) ? links[cur].ly : links[cur].ly - 1;
 	
-	/* Clear and redraw the first line */
+	/* Clear and redraw the first line - ensure we're at the right position */
 	move(adjusted_ly, links[cur].lx);
 	
-	/* Reset attributes and clear to end of line */
+	/* Reset attributes */
 	attroff(-1);
-	clrtoeol();
-	
-	/* Move back to start position to ensure cursor is correct */
-	move(adjusted_ly, links[cur].lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -127,12 +123,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	  /* Use explicit move instead of newline to avoid scrolling */
 	  move(adjusted_ly + 1, links[cur].hightext2_offset);
 	  
-	  /* Reset attributes and clear to end of line */
+	  /* Reset attributes */
 	  attroff(-1);
-	  clrtoeol();
-	  
-	  /* Move back to start position */
-	  move(adjusted_ly + 1, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
