@@ -71,16 +71,16 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	/* Reset all attributes first to clear any previous formatting */
 	attroff(-1);
 	
-	/* Clear and redraw the first line */
-	move(links[cur].ly, links[cur].lx);
+	/* Clear and redraw the first line - add 1 to account for title line */
+	move(links[cur].ly + 1, links[cur].lx);
 	
 	/* Explicitly clear the line by printing spaces with normal attributes */
 	attroff(-1);
 	for(i = links[cur].lx; i < LYcols - 1; i++)
 	    addch(' ');
 	
-	/* Move back to start position */
-	move(links[cur].ly, links[cur].lx);
+	/* Move back to start position - add 1 for title */
+	move(links[cur].ly + 1, links[cur].lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -122,16 +122,16 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	  else 
 	     stop_bold();
 
-	  /* Use explicit move instead of newline to avoid scrolling */
-	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  /* Use explicit move instead of newline to avoid scrolling - add 1 for title */
+	  move(links[cur].ly + 2, links[cur].hightext2_offset);
 	  
 	  /* Explicitly clear the second line */
 	  attroff(-1);
 	  for(i = links[cur].hightext2_offset; i < LYcols - 1; i++)
 	      addch(' ');
 	  
-	  /* Move back to start position */
-	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  /* Move back to start position - add 1 for title */
+	  move(links[cur].ly + 2, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
@@ -157,8 +157,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       else
       {
 #endif /* FANCY CURSES */
-	  /* never hide the cursor if there's no FANCY CURSES */
-	  move(links[cur].ly, links[cur].lx - 1);
+	  /* never hide the cursor if there's no FANCY CURSES - add 1 for title */
+	  move(links[cur].ly + 1, links[cur].lx - 1);
       // }
 
       refresh();  /* Always flush output */
