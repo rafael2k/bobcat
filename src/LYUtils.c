@@ -68,17 +68,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
         cur = 0;
 
     if (nlinks > 0) {
-	/* Reset all attributes first to clear any previous formatting */
-	attroff(-1);
-	
-	/* Subtract 1 because GridText.c now adds 1 for title, but first content line should be at row 1 */
-	int adjusted_ly = links[cur].ly - 1;
-	
-	/* Clear and redraw the first line - ensure we're at the right position */
-	move(adjusted_ly, links[cur].lx);
-	
-	/* Reset attributes */
-	attroff(-1);
+	move(links[cur].ly, links[cur].lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -121,10 +111,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	     stop_bold();
 
 	  /* Use explicit move instead of newline to avoid scrolling */
-	  move(adjusted_ly + 1, links[cur].hightext2_offset);
-	  
-	  /* Reset attributes */
-	  attroff(-1);
+	  move(links[cur].ly + 1, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
@@ -151,10 +138,11 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       {
 #endif /* FANCY CURSES */
 	  /* never hide the cursor if there's no FANCY CURSES */
-	  move(adjusted_ly, links[cur].lx - 1);
+	  move(links[cur].ly, links[cur].lx - 1);
       // }
 
-      refresh();  /* Always flush output */
+      if(flag)
+          refresh();
     }
     return;
 }
