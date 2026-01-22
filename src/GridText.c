@@ -748,7 +748,8 @@ PRIVATE void display_page ARGS3(HText *,text, int,line_number, char *, target)
 		}
 
       	        links[nlinks].lx= Anchor_ptr->line_pos;
-      	        links[nlinks].ly= Anchor_ptr->line_num - line_number;
+      	        /* Add 1 to account for title line at row 0 */
+      	        links[nlinks].ly= (Anchor_ptr->line_num + 1) - line_number;
 		links[nlinks].type = WWW_LINK_TYPE;
 		links[nlinks].target = empty_string;
 
@@ -766,7 +767,8 @@ PRIVATE void display_page ARGS3(HText *,text, int,line_number, char *, target)
 
 	   	links[nlinks].form = FormInfo_ptr;
 		links[nlinks].lx = Anchor_ptr->line_pos;
-		links[nlinks].ly= Anchor_ptr->line_num - line_number;
+		/* Add 1 to account for title line at row 0 */
+		links[nlinks].ly= (Anchor_ptr->line_num + 1) - line_number;
 		links[nlinks].type= WWW_FORM_LINK_TYPE;
 		links[nlinks].target= empty_string;
 		StrAllocCopy(links[nlinks].lname, empty_string);

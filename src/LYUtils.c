@@ -71,8 +71,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	/* Reset all attributes first to clear any previous formatting */
 	attroff(-1);
 	
-	/* Adjust: first link (cur=0, ly=0) is correct, others need -1 */
-	int adjusted_ly = (cur == 0) ? links[cur].ly : links[cur].ly - 1;
+	/* Subtract 1 because GridText.c now adds 1 for title, but first content line should be at row 1 */
+	int adjusted_ly = links[cur].ly - 1;
 	
 	/* Clear and redraw the first line - ensure we're at the right position */
 	move(adjusted_ly, links[cur].lx);
