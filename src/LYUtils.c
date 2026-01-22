@@ -71,15 +71,18 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	/* Reset all attributes first to clear any previous formatting */
 	attroff(-1);
 	
+	/* Adjust: first link (cur=0, ly=0) is correct, others need -1 */
+	int adjusted_ly = (cur == 0) ? links[cur].ly : links[cur].ly - 1;
+	
 	/* Clear and redraw the first line */
-	move(links[cur].ly, links[cur].lx);
+	move(adjusted_ly, links[cur].lx);
 	
 	/* Reset attributes and clear to end of line */
 	attroff(-1);
 	clrtoeol();
 	
 	/* Move back to start position to ensure cursor is correct */
-	move(links[cur].ly, links[cur].lx);
+	move(adjusted_ly, links[cur].lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -122,14 +125,14 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	     stop_bold();
 
 	  /* Use explicit move instead of newline to avoid scrolling */
-	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  move(adjusted_ly + 1, links[cur].hightext2_offset);
 	  
 	  /* Reset attributes and clear to end of line */
 	  attroff(-1);
 	  clrtoeol();
 	  
 	  /* Move back to start position */
-	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  move(adjusted_ly + 1, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
@@ -156,7 +159,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       {
 #endif /* FANCY CURSES */
 	  /* never hide the cursor if there's no FANCY CURSES */
-	  move(links[cur].ly, links[cur].lx - 1);
+	  move(adjusted_ly, links[cur].lx - 1);
       // }
 
       refresh();  /* Always flush output */
