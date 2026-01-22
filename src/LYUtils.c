@@ -73,7 +73,14 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	
 	/* Clear and redraw the first line */
 	move(links[cur].ly, links[cur].lx);
-	clrtoeol();
+	
+	/* Explicitly clear the line by printing spaces with normal attributes */
+	attroff(-1);
+	for(i = links[cur].lx; i < LYcols - 1; i++)
+	    addch(' ');
+	
+	/* Move back to start position */
+	move(links[cur].ly, links[cur].lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -117,7 +124,14 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 
 	  /* Use explicit move instead of newline to avoid scrolling */
 	  move(links[cur].ly + 1, links[cur].hightext2_offset);
-	  clrtoeol();  /* Clear second line too */
+	  
+	  /* Explicitly clear the second line */
+	  attroff(-1);
+	  for(i = links[cur].hightext2_offset; i < LYcols - 1; i++)
+	      addch(' ');
+	  
+	  /* Move back to start position */
+	  move(links[cur].ly + 1, links[cur].hightext2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
