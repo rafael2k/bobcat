@@ -36,27 +36,26 @@ void clrscr()
 
 // Função attrset() simplificada
 void attrset(int attr) {
-    printf("\033[");
-
 	switch(attr)
 	{
 	case A_BOLD:
-		printf("1m");
+		printf("\033[1m");
 		break;
 	case A_UNDERLINE:
-		printf("4m");
+		printf("\033[4m");
 		break;
 #if 0
 	case A_BLINK:
-		printf("5m");
+		printf("\033[5m");
 		break
 #endif
 	case A_REVERSE:
-		printf("7m");
+		printf("\033[7m");
 		break;
-	default:;
+	default:
+		printf("\033[0m");  /* Reset for unknown attributes */
+		break;
 	}
-
 }
 
 // Função attrset() simplificada

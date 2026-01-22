@@ -85,7 +85,7 @@ void attron(int a)
 
 void attroff(int a)
 {
-    printf("\033[1;0;0m");
+    printf("\033[0m");  /* Reset all attributes */
 }
 
 void mvprintw(int y, int x, const char *fmt, ...)

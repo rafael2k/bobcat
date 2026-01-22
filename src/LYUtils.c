@@ -68,7 +68,13 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
         cur = 0;
 
     if (nlinks > 0) {
+	/* Reset all attributes first to clear any previous formatting */
+	attroff(-1);
+	
+	/* Clear and redraw the first line */
 	move(links[cur].ly, links[cur].lx);
+	clrtoeol();
+	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
 	    * they can't handle two attributes at the 
@@ -111,6 +117,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 
 	  /* Use explicit move instead of newline to avoid scrolling */
 	  move(links[cur].ly + 1, links[cur].hightext2_offset);
+	  clrtoeol();  /* Clear second line too */
 
 	  if (flag == ON)
 	     start_reverse();
@@ -140,8 +147,7 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	  move(links[cur].ly, links[cur].lx - 1);
       // }
 
-      if(flag)
-          refresh();
+      refresh();  /* Always flush output */
     }
     return;
 }
