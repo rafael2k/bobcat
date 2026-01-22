@@ -42,35 +42,6 @@ struct _HTStream {                      /* only know it as object */
 
 #define TITLE_LINES  1
 
-/* Append buffer structure for efficient screen updates (kilo.c approach) */
-struct abuf {
-    char *b;
-    int len;
-    int cap;
-};
-
-#define ABUF_INIT {NULL, 0, 0}
-
-/* Append to buffer, reallocating if needed */
-PRIVATE void abAppend(struct abuf *ab, const char *s, int len) {
-    if (ab->len + len >= ab->cap) {
-        int newcap = ab->cap ? ab->cap * 2 : 1024;
-        if (newcap < ab->len + len + 1) newcap = ab->len + len + 1024;
-        char *new = realloc(ab->b, newcap);
-        if (new == NULL) return;
-        ab->b = new;
-        ab->cap = newcap;
-    }
-    memcpy(ab->b + ab->len, s, len);
-    ab->len += len;
-}
-
-PRIVATE void abFree(struct abuf *ab) {
-    free(ab->b);
-    ab->b = NULL;
-    ab->len = 0;
-    ab->cap = 0;
-}
 
 /*	From default style sheet:
 */
@@ -111,46 +82,6 @@ typedef struct _line {
 } HTLine;
 
 #define LINE_SIZE(l) (sizeof(HTLine)+(l))	/* allow for terminator */
-
-/* Memory pool for HTLine structures */
-#define LINE_POOL_SIZE 32
-PRIVATE HTLine *line_pool[LINE_POOL_SIZE];
-PRIVATE int line_pool_count = 0;
-
-PRIVATE HTLine *line_pool_alloc(size_t size) {
-    HTLine *line;
-    if (line_pool_count > 0) {
-        line = line_pool[--line_pool_count];
-        if (line && LINE_SIZE(size) <= LINE_SIZE(MAX_LINE)) {
-            memset(line, 0, LINE_SIZE(size));
-            return line;
-        }
-        /* If pooled line is wrong size, free it and allocate new one */
-        if (line) free(line);
-    }
-    line = (HTLine *)calloc(sizeof(char), LINE_SIZE(size));
-    return line;
-}
-
-PRIVATE void line_pool_free(HTLine *line) {
-    if (line && line_pool_count < LINE_POOL_SIZE) {
-        line_pool[line_pool_count++] = line;
-    } else if (line) {
-        free(line);
-    }
-}
-
-/* Clean up line pool - call on exit */
-PRIVATE void line_pool_cleanup(void) {
-    int i;
-    for (i = 0; i < line_pool_count; i++) {
-        if (line_pool[i]) {
-            free(line_pool[i]);
-            line_pool[i] = NULL;
-        }
-    }
-    line_pool_count = 0;
-}
 
 typedef struct _TextAnchor {
 	struct _TextAnchor *	next;
@@ -380,7 +311,7 @@ PUBLIC HText *	HText_new ARGS1(HTParentAnchor *,anchor)
 #endif /* VMS && VAXC && !__DECC */
     }
     
-    line = self->last_line = line_pool_alloc(MAX_LINE);
+    line = self->last_line = (HTLine *)calloc(sizeof(char),LINE_SIZE(MAX_LINE));
     if (line == NULL) outofmem(__FILE__, "HText_New");
     line->next = line->prev = line;
     line->offset = line->size = 0;
@@ -475,7 +406,7 @@ PUBLIC void 	HText_free ARGS1(HText *,self)
 	    l->next->prev = l->prev;
 	    l->prev->next = l->next;	/* Unlink l */
 	    self->last_line = l->prev;
-	    line_pool_free(l);
+	    free(l);
 	}
 	if (l == self->last_line)	/* empty */
 	    break;
@@ -881,13 +812,6 @@ PRIVATE void display_page ARGS3(HText *,text, int,line_number, char *, target)
     if(!display_flag) /* nothing on the page */
 	addstr("\n     Document is empty");
 
-    /* Ensure status line stays in correct position after refresh */
-    if(user_mode == NOVICE_MODE) {
-        move(LYlines-3, 0);
-    } else {
-        move(LYlines-1, 0);
-    }
-
     refresh();
 
 }
@@ -941,7 +865,7 @@ PRIVATE void split_line ARGS2(HText *,text, int,split)
     int ctrl_chars_on_previous_line = 0;
     char * cp;
 
-    HTLine * line = line_pool_alloc(MAX_LINE);
+    HTLine * line = (HTLine *)LY_CALLOC(sizeof(char), LINE_SIZE(MAX_LINE));
 
 #if 0
     if (line == NULL) {
@@ -1102,7 +1026,7 @@ PRIVATE void split_line ARGS2(HText *,text, int,split)
      * Use a substitute for realloc.
      */
 
-    temp = line_pool_alloc(previous->size);
+    temp = (HTLine *)LY_CALLOC(1, LINE_SIZE(previous->size));
 #if 0
     if (temp == NULL) {
 	howmuchheap();
@@ -1522,7 +1446,7 @@ PUBLIC void HText_endAppend ARGS1(HText *,text)
 	next_to_the_last_line->next = line_ptr;
 	line_ptr->prev = next_to_the_last_line;
 	if(text->last_line)
-	    line_pool_free(text->last_line);
+	    free(text->last_line);
 	text->last_line = next_to_the_last_line;
 	text->lines--;
 
@@ -2976,7 +2900,6 @@ PUBLIC void HText_appendMHChar ARGS2(HText *, text, char, c)	{
 }
 
 static void free_all_texts NOARGS	{
-    line_pool_cleanup();  /* Clean up line pool on exit */
 /*
  *	Purpose:	Free all currently loaded HText objects in memory.
  *	Arguments:	void

@@ -74,12 +74,14 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	saved_lx = links[cur].lx;
 	
 	/* Ensure we're within screen bounds */
+	/* saved_ly is relative to content area (0-based), add 1 for title line */
 	if (saved_ly >= display_lines || saved_ly < 0)
 	    return;
 	if (saved_lx >= LYcols || saved_lx < 0)
 	    return;
 
-	move(saved_ly, saved_lx);
+	/* Move to screen position: line 0 is title, lines 1+ are content */
+	move(saved_ly + 1, saved_lx);
 	
 	if (flag == ON) { 
 	   /* makes some terminals work wrong because
@@ -127,11 +129,12 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
 	     stop_bold();
 
 	  /* Use explicit move instead of newline to avoid scrolling */
+	  /* saved_ly is relative to content, add 2 for title line + next content line */
 	  int h2_offset = links[cur].hightext2_offset;
 	  if (h2_offset < 0) h2_offset = 0;
 	  if (h2_offset >= LYcols) h2_offset = LYcols - 1;
 	  
-	  move(saved_ly + 1, h2_offset);
+	  move(saved_ly + 2, h2_offset);
 
 	  if (flag == ON)
 	     start_reverse();
@@ -149,13 +152,6 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       else
           stop_bold();
 
-      /* Restore cursor to proper position - ensure status line stays put */
-      if(user_mode == NOVICE_MODE) {
-          move(LYlines-3, 0);  /* Status line position for novice mode */
-      } else {
-          move(LYlines-1, 0);  /* Status line position for advanced mode */
-      }
-
 #ifdef FANCY_CURSES
       if(!LYShowCursor)
       {
@@ -165,7 +161,8 @@ PUBLIC void highlight ARGS2(int,flag, int,cur)
       {
 #endif /* FANCY CURSES */
 	  /* never hide the cursor if there's no FANCY CURSES */
-	  move(saved_ly, saved_lx);
+	  /* Restore to link position (add 1 for title line) */
+	  move(saved_ly + 1, saved_lx);
       // }
 
       if(flag)
@@ -283,26 +280,16 @@ PUBLIC void statusline ARGS1(char *,text)
     max_length = ((LYcols - 2) < 255) ? (LYcols - 2) : 255;
     buffer[max_length] = '\0';
 
-    /* Always use fixed position for status line to prevent "going up" */
     if(user_mode == NOVICE_MODE)
-        status_line_y = LYlines-3;
+        move(LYlines-3,0);
     else
-        status_line_y = LYlines-1;
-    
-    /* Ensure status line is within bounds */
-    if (status_line_y < 0) status_line_y = 0;
-    if (status_line_y >= LYlines) status_line_y = LYlines - 1;
-    
-    move(status_line_y, 0);
+        move(LYlines-1,0);
     clrtoeol();
     if (text != NULL) {
 	start_reverse();
 	addstr(buffer);
 	stop_reverse();
     }
-    
-    /* Ensure cursor is positioned correctly after status line update */
-    move(status_line_y, strlen(buffer) < LYcols ? strlen(buffer) : LYcols - 1);
 
     refresh();
     return;
