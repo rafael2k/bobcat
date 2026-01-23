@@ -1301,6 +1301,14 @@ PUBLIC void HText_appendCharacter ARGS2(HText *,text, char,ch)
     {
         HTLine * line = text->last_line;	/* May have changed */
         HTFont font = style->font;
+        
+        /* Prevent buffer overflow - ensure we don't exceed MAX_LINE */
+        if ((int)line->size >= (int)(MAX_LINE - 1)) {
+            /* Force a new line if buffer is getting full */
+            new_line(text);
+            line = text->last_line;  /* Get the new line */
+        }
+        
         line->data[line->size++] =	/* Put character into line */
            font & HT_CAPITALS ? TOUPPER(ch) : ch;
 	line->data[line->size] = '\0';

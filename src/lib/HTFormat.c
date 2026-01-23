@@ -202,8 +202,9 @@ static void free_presentations NOARGS	{
 **	a socket or a file.
 **	The input buffer size, if large will give greater efficiency and
 **	release the server faster, and if small will save space on PCs etc.
+**	Increased for better page buffer handling and memory efficiency.
 */
-#define INPUT_BUFFER_SIZE 256		/* Tradeoff */
+#define INPUT_BUFFER_SIZE 2048		/* Increased from 256 for better buffering */
 PRIVATE char input_buffer[INPUT_BUFFER_SIZE];
 PRIVATE char * input_pointer;
 PRIVATE char * input_limit;
@@ -501,16 +502,9 @@ PUBLIC int HTCopy ARGS2(
 	HTStream*,		sink)
 {
     HTStreamClass targetClass;    
-    char line[256];
+    char line[80];  /* Sufficient for status line message (fits in typical terminal width) */
     long bytes=0;
     int rv = 0;
-    char * msg;
-
-    if (loading_length == -1)
-	msg = "Read %ld bytes of data.";
-    else
-	/* We have a loading_length. */
-	msg = "Read %ld of %ld bytes of data.";
 
 
 /*	Push the data down the stream
@@ -587,7 +581,10 @@ PUBLIC int HTCopy ARGS2(
 	(*targetClass.put_block)(sink, input_buffer, status);
 
 	bytes += status;
-	sprintf(line, msg, bytes, loading_length);
+	if (loading_length == -1)
+	    sprintf(line, "Read %ld bytes of data.", bytes);
+	else
+	    sprintf(line, "Read %ld of %ld bytes of data.", bytes, loading_length);
         HTProgress(line);
     } /* next bufferload */
 

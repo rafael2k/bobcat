@@ -273,12 +273,13 @@ PUBLIC void statusline ARGS1(char *,text)
     mustshow = FALSE;
 
     /* deal with any newlines or tabs in the string */
-    LYstrncpy(buffer, text, 255);
-    convert_to_spaces(buffer);
-
-    /* make sure text is not longer than the statusline window */
+    /* Ensure buffer is large enough and properly null-terminated */
     max_length = ((LYcols - 2) < 255) ? (LYcols - 2) : 255;
-    buffer[max_length] = '\0';
+    if (max_length < 0) max_length = 0;
+    LYstrncpy(buffer, text, max_length);
+    buffer[max_length] = '\0';  /* Ensure null termination */
+    convert_to_spaces(buffer);
+    buffer[max_length] = '\0';  /* Re-null terminate after conversion */
 
     if(user_mode == NOVICE_MODE)
         move(LYlines-3,0);
